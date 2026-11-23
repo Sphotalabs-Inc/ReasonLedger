@@ -21,7 +21,9 @@ def test_main_switches_output_to_utf8_and_replaces_what_cannot_be_encoded(
     print("decision — memory → ledger")
     legacy.flush()
 
-    assert legacy.buffer.getvalue().decode("utf-8") == "decision — memory → ledger\n"  # type: ignore[attr-defined]
+    written = legacy.buffer.getvalue().decode("utf-8")  # type: ignore[attr-defined]
+    # A text-mode stream translates "\n" to the platform newline, so compare without it.
+    assert written.replace("\r\n", "\n") == "decision — memory → ledger\n"
 
 
 @pytest.mark.phase_3
