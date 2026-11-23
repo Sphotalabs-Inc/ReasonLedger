@@ -1,0 +1,13 @@
+name: ReasonLedger decisions
+
+on: pull_request
+
+jobs:
+  conflicts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: astral-sh/setup-uv@v5
+      - run: uv sync --all-packages
+      - run: uv run reasonledger check --decisions --base origin/${{ github.base_ref }}

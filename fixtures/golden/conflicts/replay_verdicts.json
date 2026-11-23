@@ -1,0 +1,21 @@
+{
+  "description": "Recorded conflict-classifier verdicts (real-model mode). Replayed in CI so no live inference runs. Keyed by unordered decision-id pair.",
+  "pairs": [
+    {
+      "decision_a": "dec_retry01",
+      "decision_b": "dec_retry_fixed",
+      "is_conflict": true,
+      "severity": "high",
+      "explanation": "Both decide payment webhook retry backoff but pick opposing strategies.",
+      "score": 0.92
+    },
+    {
+      "decision_a": "dec_retry01",
+      "decision_b": "dec_cache01",
+      "is_conflict": false,
+      "severity": "low",
+      "explanation": "Unrelated subjects: retry backoff vs catalog caching.",
+      "score": 0.04
+    }
+  ]
+}

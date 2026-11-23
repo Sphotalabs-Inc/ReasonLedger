@@ -1,0 +1,29 @@
+{
+  "changes": [
+    {
+      "repo": "payments-service",
+      "github_pr_number": 42,
+      "provenance_status": "ai_assisted",
+      "oversight_classification": "reviewed",
+      "is_critical_path": true,
+      "finding_count_min": 2
+    },
+    {
+      "repo": "payments-service",
+      "github_pr_number": 17,
+      "provenance_status": "ai_assisted",
+      "oversight_classification": "merged_unreviewed",
+      "is_critical_path": true,
+      "finding_count_min": 2
+    },
+    {
+      "repo": "docs-site",
+      "github_pr_number": 3,
+      "provenance_status": "human",
+      "oversight_classification": "n/a",
+      "is_critical_path": false,
+      "finding_count_min": 0
+    }
+  ],
+  "contributor_logins": ["alice", "bob", "carol", "github-copilot[bot]"]
+}

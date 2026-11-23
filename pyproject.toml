@@ -1,0 +1,60 @@
+[project]
+name = "reasonledger-workspace"
+version = "0.3.0a6"
+description = "ReasonLedger monorepo workspace root"
+requires-python = ">=3.12"
+readme = "README.md"
+
+[tool.uv.workspace]
+members = [
+    "packages/core",
+    "packages/cli",
+    "packages/mcp",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+    "pytest-cov>=6.0",
+    "pytest-asyncio>=0.25",
+    "hypothesis>=6.120",
+    "types-PyYAML>=6.0",
+    "ruff>=0.9",
+    "mypy>=1.14",
+]
+
+[tool.pytest.ini_options]
+testpaths = [
+    "packages/core/tests",
+    "packages/cli/tests",
+    "packages/mcp/tests",
+    "tests",
+]
+markers = [
+    "phase_1: Phase 1 acceptance suite (provenance)",
+    "phase_2: Phase 2 acceptance suite (control & evidence)",
+    "phase_3: Phase 3 acceptance suite (decision capture)",
+    "phase_4: Phase 4 acceptance suite (reasoning memory)",
+    "phase_5: Phase 5 acceptance suite (zero-config scan and module map, spec/14)",
+]
+addopts = "-q --strict-markers"
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+
+# fastembed is an optional extra and may be absent when type-checking; when present it is typed.
+[[tool.mypy.overrides]]
+module = "fastembed"
+ignore_missing_imports = true

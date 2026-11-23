@@ -1,0 +1,31 @@
+name: ReasonLedger policy gate (customer example)
+
+# Copy into a customer repo as .github/workflows/reasonledger-check.yml.
+# Not installed on the ReasonLedger monorepo itself — CI exercises the
+# composite action + CLI against fixtures/sandbox/pr-workflows.
+
+"on":
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  reasonledger-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Build change context from PR metadata
+        id: context
+        run: |
+          # In production this would be produced by the ReasonLedger GitHub App.
+          # Sandbox demos commit a change JSON under .reasonledger/pr-context.json.
+          echo "change_path=.reasonledger/pr-context.json" >> "$GITHUB_OUTPUT"
+
+      - uses: Sphotalabs-Inc/ReasonLedger/.github/actions/reasonledger-check@main
+        with:
+          policy-path: .reasonledger/policy.yml
+          change-path: ${{ steps.context.outputs.change_path }}

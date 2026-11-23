@@ -1,0 +1,53 @@
+[
+  {
+    "id": "reviewed-ai-pr",
+    "input": {
+      "is_ai_assisted": true,
+      "author_logins": ["github-copilot[bot]"],
+      "merged_by_login": "bob",
+      "reviews": [
+        {"reviewer_login": "bob", "state": "APPROVED"}
+      ]
+    },
+    "expected": "reviewed"
+  },
+  {
+    "id": "modified-after-ai",
+    "input": {
+      "is_ai_assisted": true,
+      "human_commits_after_ai": true,
+      "author_logins": ["github-copilot[bot]"],
+      "reviews": []
+    },
+    "expected": "modified"
+  },
+  {
+    "id": "self-merged-unreviewed",
+    "input": {
+      "is_ai_assisted": true,
+      "author_logins": ["alice"],
+      "merged_by_login": "alice",
+      "reviews": []
+    },
+    "expected": "merged_unreviewed"
+  },
+  {
+    "id": "not-ai-assisted",
+    "input": {
+      "is_ai_assisted": false,
+      "author_logins": ["alice"],
+      "reviews": [{"reviewer_login": "bob", "state": "APPROVED"}]
+    },
+    "expected": "n/a"
+  },
+  {
+    "id": "author-self-approval-ignored",
+    "input": {
+      "is_ai_assisted": true,
+      "author_logins": ["alice"],
+      "merged_by_login": "bob",
+      "reviews": [{"reviewer_login": "alice", "state": "APPROVED"}]
+    },
+    "expected": "merged_unreviewed"
+  }
+]

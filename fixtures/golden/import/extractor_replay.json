@@ -1,0 +1,10 @@
+{
+  "claude.md": [
+    {
+      "context": "Timestamp storage timezone policy",
+      "choice": "UTC",
+      "source_ref": "claude.md#timestamps",
+      "justifies": ["backend/app/date_utils.py"]
+    }
+  ]
+}

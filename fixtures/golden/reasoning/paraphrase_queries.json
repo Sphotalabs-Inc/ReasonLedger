@@ -1,0 +1,45 @@
+{
+  "description": "Paraphrase queries -> expected matching decision id (local embedder quality gate).",
+  "queries": [
+    {
+      "query": "backoff and jitter when payment webhooks fail",
+      "expected_match": "dec_retry01"
+    },
+    {
+      "query": "how should we retry failed payment deliveries",
+      "expected_match": "dec_retry01"
+    },
+    {
+      "query": "redis cache for catalog product reads",
+      "expected_match": "dec_cache01"
+    },
+    {
+      "query": "in-memory caching layer for the catalog",
+      "expected_match": "dec_cache01"
+    },
+    {
+      "query": "jwt session tokens for user authentication",
+      "expected_match": "dec_auth01"
+    },
+    {
+      "query": "login auth strategy using signed tokens",
+      "expected_match": "dec_auth01"
+    },
+    {
+      "query": "postgres relational database for order storage",
+      "expected_match": "dec_db01"
+    },
+    {
+      "query": "sql database choice for persisting orders",
+      "expected_match": "dec_db01"
+    },
+    {
+      "query": "message queue for async job processing",
+      "expected_match": "dec_queue01"
+    },
+    {
+      "query": "background worker queue with redis streams",
+      "expected_match": "dec_queue01"
+    }
+  ]
+}

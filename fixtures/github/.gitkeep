@@ -1,0 +1,8 @@
+# Recorded GitHub API responses (VCR/cassette style). No live network in CI.
+#
+# Layout:
+#   github/orgs/<org-slug>/repos/<repo>/pulls/<number>.json
+#   github/orgs/<org-slug>/repos/<repo>/commits/<sha>.json
+#   github/orgs/<org-slug>/members.json
+#
+# Each file is a raw API response body. Tests replay these via the ingest layer.

@@ -1,0 +1,8 @@
+{
+  "provenance": "ai_assisted",
+  "oversight": "merged_unreviewed",
+  "changed_paths": ["payments/charge.py"],
+  "author_login": "alice",
+  "approver_logins": [],
+  "codeowner_logins": ["payments-owner"]
+}

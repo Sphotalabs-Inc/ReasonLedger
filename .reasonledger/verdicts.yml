@@ -1,0 +1,68 @@
+version: '1'
+verdicts:
+- same_question: true
+  compatible: false
+  question: What should be displayed at the top of the Review tab, and how should
+    pending decisions be prioritized?
+  reason: Decision A and Decision B both answer the question of how to display information
+    at the top of the Review tab, but they have different answers. Decision A proposes
+    a 'Waiting on you' card with pending decisions, while Decision B suggests a separate
+    awaiting-review section. These two approaches cannot coexist because they would
+    lead to duplicate anchors and conflicting UI logic.
+  severity: high
+  decision_a: dec_0tao1p
+  decision_b: dec_54yz9f
+  fingerprint: 4c1a1ba345fb457768494e0a36fbb966
+  model: llama3.1
+  judged_at: '2026-11-12T18:42:47.243584Z'
+- same_question: false
+  compatible: false
+  question: How to surface what needs a person's decision
+  reason: Decision A determines how to fold layout proposals into existing modules,
+    while Decision B decides how to display pending decisions and agent options in
+    the UI. Following Decision A would not break or undo the UI changes made by Decision
+    B, but they pull the codebase in different directions, making them a medium-severity
+    conflict.
+  severity: medium
+  decision_a: dec_14amar
+  decision_b: dec_54yz9f
+  fingerprint: dcb1e473a058bb1f4fceec08e4ae7076
+  model: llama3.1
+  judged_at: '2026-11-12T18:53:11.310473Z'
+- same_question: false
+  compatible: true
+  question: Module merging and component UX guidance
+  reason: Decision A defines how to fold layout-only proposals into feature modules,
+    while Decision B concerns UX guidance and UI behavior. There is no conflict between
+    the two.
+  severity: low
+  decision_a: dec_14amar
+  decision_b: dec_g436eo
+  fingerprint: e49084ed50e67a6b3f6db193252266c3
+  model: llama3.1
+  judged_at: '2026-11-12T19:54:52.864805Z'
+- same_question: false
+  compatible: true
+  question: how to handle the topics feature
+  reason: Decision A removes the topics feature, while Decision B keeps the feature
+    for a different purpose (judging conflicts). The removal of the topics feature
+    in Decision A does not conflict with the keeping of the feature in Decision B.
+  severity: low
+  decision_a: dec_22r9zr
+  decision_b: dec_t6vkni
+  fingerprint: 6d1a5c56f0406f5db429541803b6934f
+  model: llama3.1
+  judged_at: '2026-11-12T19:56:47.050935Z'
+- same_question: false
+  compatible: true
+  question: How should the UI handle conflicts between decisions?
+  reason: Both decisions implement a way to show conflicts, but dec_zfty5t's implementation
+    is more comprehensive and accurate. dec_apnleq's implementation is still available
+    for backwards compatibility, but dec_zfty5t's implementation should be used for
+    new code.
+  severity: low
+  decision_a: dec_apnleq
+  decision_b: dec_t6vkni
+  fingerprint: f8c71272f4781afadc01ea13efaa7c3b
+  model: llama3.1
+  judged_at: '2026-11-12T20:00:51.020601Z'

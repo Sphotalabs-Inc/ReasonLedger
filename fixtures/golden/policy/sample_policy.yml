@@ -1,0 +1,18 @@
+rules:
+  - id: payments-need-owner-review
+    when:
+      provenance: ai_assisted
+      paths:
+        - "payments/**"
+    require:
+      oversight: reviewed
+      approver: codeowner
+      approver_not: author
+    on_violation: fail
+  - id: ai-should-be-reviewed
+    when:
+      provenance: ai_assisted
+    require:
+      oversight: reviewed
+    on_violation: warn
+version: "1"

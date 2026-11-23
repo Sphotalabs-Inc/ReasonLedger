@@ -1,0 +1,11 @@
+{
+  "expected": {
+    "id": "dec_harvest1",
+    "ai_tool": "claude-code",
+    "model": "claude-opus-4-8",
+    "choice": "Exponential backoff with jitter",
+    "justifies": ["payments/retry.py:40-72"],
+    "alternatives_rejected": ["Fixed interval retries", "Immediate retry storm"],
+    "oversight": "pending"
+  }
+}

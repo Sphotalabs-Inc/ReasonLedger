@@ -1,0 +1,163 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# The floor is 3.12 (pyproject). Without this, runners pick their newest Python (macOS had 3.15),
+# for which compiled dependencies such as hypothesis publish no wheel.
+env:
+  UV_PYTHON: "3.12"
+
+jobs:
+  phase-1:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Install Python dependencies
+        run: uv sync --all-packages --dev
+
+      - name: Lint (ruff)
+        run: uv run ruff check packages/core packages/cli packages/mcp
+
+      - name: Typecheck (mypy)
+        run: uv run mypy packages/core/src packages/cli/src packages/mcp/src
+
+      - name: Phase 1 tests
+        run: >
+          uv run pytest -m phase_1
+          --cov=reasonledger_core.provenance
+          --cov=reasonledger_core.oversight
+          --cov=reasonledger_core.ingest
+          --cov=reasonledger_core.paths
+          --cov-report=term-missing
+          --cov-fail-under=80
+
+  phase-2:
+    runs-on: ubuntu-latest
+    needs: phase-1
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Install Python dependencies
+        run: uv sync --all-packages --dev
+
+      - name: Phase 2 tests (and Phase 1 regression)
+        run: >
+          uv run pytest -m "phase_1 or phase_2"
+          --cov=reasonledger_core.provenance
+          --cov=reasonledger_core.oversight
+          --cov=reasonledger_core.ingest
+          --cov=reasonledger_core.paths
+          --cov=reasonledger_core.policy
+          --cov-report=term-missing
+          --cov-fail-under=80
+
+  phase-3:
+    runs-on: ubuntu-latest
+    needs: phase-2
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Install Python dependencies
+        run: uv sync --all-packages --dev
+
+      - name: Phase 3 tests (and Phase 1–2 regression)
+        run: >
+          uv run pytest -m "phase_1 or phase_2 or phase_3"
+
+  phase-4:
+    runs-on: ubuntu-latest
+    needs: phase-3
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Install Python dependencies
+        run: uv sync --all-packages --dev
+
+      - name: Phase 4 tests (and Phase 1–3 regression)
+        run: >
+          uv run pytest -m "phase_1 or phase_2 or phase_3 or phase_4"
+
+  phase-5:
+    runs-on: ubuntu-latest
+    needs: phase-4
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Install Python dependencies
+        run: uv sync --all-packages --dev
+
+      # The 80% overall gate lives here: only the full suite exercises all the code, so a gate on
+      # an earlier phase would count modules that phase's tests never touch.
+      - name: Phase 5 tests (and Phase 1–4 regression)
+        run: >
+          uv run pytest -m "phase_1 or phase_2 or phase_3 or phase_4 or phase_5"
+          --cov=reasonledger_core --cov=reasonledger_cli
+          --cov=reasonledger_mcp
+          --cov-report=term-missing
+          --cov-fail-under=80
+
+  # S53: the full suite on the other two platforms, one Python version. Linux is covered by the
+  # phase jobs above.
+  platforms:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    needs: phase-1
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Install Python dependencies
+        run: uv sync --all-packages --dev
+
+      - name: Full suite
+        run: uv run pytest -v
+
+  dists:
+    runs-on: ubuntu-latest
+    needs: phase-4
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      # Populates uv's cache so the wheel builds below can run --offline.
+      - name: Install Python dependencies
+        run: uv sync --all-packages --dev
+
+      - name: Build and install-smoke the published dists
+        run: |
+          chmod +x scripts/check_dists.sh
+          ./scripts/check_dists.sh

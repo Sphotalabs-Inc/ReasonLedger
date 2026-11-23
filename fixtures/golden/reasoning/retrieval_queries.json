@@ -1,0 +1,21 @@
+{
+  "description": "Golden semantic retrieval queries -> expected top decision id.",
+  "queries": [
+    {
+      "query": "retry backoff strategy for payment webhook delivery",
+      "expected_top": "dec_retry01"
+    },
+    {
+      "query": "caching layer for the product catalog with redis",
+      "expected_top": "dec_cache01"
+    },
+    {
+      "query": "authentication session token strategy jwt",
+      "expected_top": "dec_auth01"
+    },
+    {
+      "query": "primary datastore relational postgres for orders",
+      "expected_top": "dec_db01"
+    }
+  ]
+}

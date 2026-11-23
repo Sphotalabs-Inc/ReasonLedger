@@ -1,0 +1,118 @@
+/* ReasonLedger Review — the approve / retire dialog. Tokens come from style.css. */
+
+.review-dialog {
+  width: min(var(--max-width), calc(100vw - var(--space-6)));
+  max-height: calc(100vh - var(--space-6));
+  padding: var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+  overflow-y: auto;
+}
+
+.review-dialog::backdrop {
+  background: var(--color-text);
+  opacity: 0.4;
+}
+
+.review-dialog h2 {
+  margin: 0 0 var(--space-2);
+}
+
+/* Nothing in the record is clipped or struck through here: this is the text being judged. */
+.review-record .item,
+.review-record .item:last-child {
+  border: 0;
+  padding-top: 0;
+  opacity: 1;
+}
+
+.review-record .item-body {
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  text-decoration: none;
+}
+
+.review-reason {
+  display: block;
+  margin-top: var(--space-3);
+  font-weight: 600;
+}
+
+.review-dialog textarea {
+  width: 100%;
+  margin-top: var(--space-1);
+  padding: var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  font: inherit;
+}
+
+.review-acting {
+  margin: var(--space-3) 0 0;
+}
+
+.acting-as {
+  color: var(--color-muted);
+  font-size: 0.875rem;
+}
+
+/* One line per decision in the Decisions section; opening a row shows its whole card. */
+.item-row { border-top: 1px solid var(--color-border); }
+.item-row > summary {
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1) var(--space-2);
+  padding: var(--space-2) 0; cursor: pointer; list-style: none;
+}
+.item-row > summary::-webkit-details-marker { display: none; }
+.item-row > summary:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+.item-row-what { flex: 1 1 0; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.item-row > summary code, .item-row > summary .badge { flex: none; }
+.item-row > summary button { flex: none; }
+/* Open, the card repeats the line: keep the id and badges, drop the clipped text and the
+   second Review button. */
+.item-row[open] > summary .item-row-what { display: none; }
+.item-row[open] > summary button { display: none; }
+.item-row > .item { border: 0; padding-top: 0; }
+.item-row > .item > .item-title { display: none; }
+
+.setup-more { margin-top: var(--space-2); font-size: 0.9rem; }
+.setup-more > summary { cursor: pointer; color: var(--color-muted); }
+
+/* The tabs: a count on Review, the Map's two modes, Overview's call to action, Ask's filter. */
+.tab-count {
+  margin-left: var(--space-1); padding: 0 var(--space-2); border-radius: var(--space-3);
+  background: var(--color-warn-soft); color: var(--color-warn); font-size: 0.8rem;
+}
+.map-mode:not([hidden]) {
+  display: flex; gap: var(--space-2); max-width: var(--map-max-width);
+  margin: var(--space-4) auto 0; padding: 0 var(--space-4);
+}
+.map-mode button[aria-pressed="true"] {
+  border-color: var(--color-accent); background: var(--color-accent-soft); color: var(--color-accent);
+}
+.overview-cta {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: var(--space-3); margin: 0 0 var(--space-4); padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border); border-radius: var(--radius); color: var(--color-muted);
+}
+.overview-cta.is-waiting { border-color: var(--color-warn); background: var(--color-warn-soft); color: var(--color-text); }
+.ask-filter { display: flex; align-items: center; gap: var(--space-2); margin: 0 0 var(--space-4); }
+.ask-filter select { padding: var(--space-2); border: 1px solid var(--color-border); border-radius: var(--radius); }
+.settings-fold { cursor: pointer; font-weight: 600; }
+/* Who recorded a decision and when, under its line in the queue. */
+.item-row-meta { flex: 0 0 100%; color: var(--color-muted); font-size: 0.8rem; }
+.item-row[open] > summary .item-row-meta { display: none; }
+.judge-pair { margin: 0 0 var(--space-3); padding-left: var(--space-4); font-size: 0.9rem; }
+.judge-note {
+  margin: 0 0 var(--space-3); padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border); border-radius: var(--radius); background: var(--color-accent-soft);
+}
+/* Conflicts tab: who and when under each side, the later one marked in words and colour. */
+.conflict-side p.conflict-who { margin-top: var(--space-1); color: var(--color-muted); font-size: 0.8rem; }
+.badge.recent-badge { border-color: var(--color-accent); background: var(--color-accent-soft); color: var(--color-accent); }
+.pairs-title { margin: var(--space-5) 0 var(--space-1); font-size: 1.1rem; }
+
+.item-verdict {
+  margin: var(--space-2) 0 var(--space-1);
+}

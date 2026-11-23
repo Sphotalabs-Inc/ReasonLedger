@@ -1,0 +1,217 @@
+/* ReasonLedger module map — tokens first, then components. Colour is never the only channel:
+   every colour here sits beside a word, a number or a border style. */
+
+:root {
+  --map-max-width: 72rem;
+  --map-hue-1: #2563a8;
+  --map-hue-2: #2d6a4f;
+  --map-hue-3: #a16207;
+  --map-hue-4: #7c3aed;
+  --map-hue-5: #b91c1c;
+  --map-hue-6: #0f766e;
+  --map-hue-7: #9a3412;
+  --map-hue-8: #475569;
+  --map-cov-none: var(--color-border);
+  --map-cov-low: var(--color-warn);
+  --map-cov-mid: var(--color-link);
+  --map-cov-high: var(--color-accent);
+  --map-tier-frontend: var(--color-link-soft);
+  --map-tier-backend: var(--color-accent-soft);
+  --map-tile-min: 10rem;
+}
+
+.map-pane:not([hidden]) {
+  max-width: var(--map-max-width);
+  margin: 0 auto;
+  padding: var(--space-4);
+}
+
+.map-headline {
+  font-size: 1.1rem;
+  margin: var(--space-2) 0;
+}
+
+.map-note,
+.map-facts-line {
+  color: var(--color-muted);
+  font-size: 0.9rem;
+  margin: var(--space-1) 0;
+}
+
+.map-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+  margin: var(--space-4) 0;
+}
+
+.map-toolbar input[type="search"] {
+  flex: 1 1 16rem;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  font: inherit;
+}
+
+.map-band {
+  margin: var(--space-5) 0;
+}
+
+.map-band h3 {
+  margin: 0 0 var(--space-1);
+}
+
+.map-tiles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}
+
+/* Size follows file count (square-root scaled into five steps), so one huge module does not
+   crowd the rest off the page. */
+.map-tile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  flex: 1 1 var(--map-tile-min);
+  min-width: var(--map-tile-min);
+  padding: var(--space-3);
+  text-align: left;
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-top: 0.35rem solid var(--map-cov-none);
+  border-radius: var(--radius);
+  font: inherit;
+  cursor: pointer;
+}
+
+.map-tile[data-size="2"] { flex-grow: 2; }
+.map-tile[data-size="3"] { flex-grow: 3; }
+.map-tile[data-size="4"] { flex-grow: 4; }
+.map-tile[data-size="5"] { flex-grow: 5; }
+.map-tile[data-coverage="low"] { border-top-color: var(--map-cov-low); }
+.map-tile[data-coverage="mid"] { border-top-color: var(--map-cov-mid); }
+.map-tile[data-coverage="high"] { border-top-color: var(--map-cov-high); }
+
+.map-tile:hover,
+.map-tile:focus-visible {
+  border-color: var(--color-link);
+  outline: none;
+}
+
+.map-tile-name {
+  font-weight: 700;
+}
+
+.map-tile-meta,
+.map-tile-counts,
+.map-tile-files {
+  font-size: 0.85rem;
+  color: var(--color-muted);
+}
+
+.map-coverage {
+  width: 100%;
+  height: 0.5rem;
+  accent-color: var(--color-accent);
+}
+
+.map-chip,
+.map-tier,
+.map-badge {
+  display: inline-block;
+  padding: 0 var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.map-tier[data-tier="frontend"] { background: var(--map-tier-frontend); }
+.map-tier[data-tier="backend"] { background: var(--map-tier-backend); }
+
+.map-chip { border-width: 2px; }
+.map-chip[data-hue="1"] { border-color: var(--map-hue-1); }
+.map-chip[data-hue="2"] { border-color: var(--map-hue-2); }
+.map-chip[data-hue="3"] { border-color: var(--map-hue-3); }
+.map-chip[data-hue="4"] { border-color: var(--map-hue-4); }
+.map-chip[data-hue="5"] { border-color: var(--map-hue-5); }
+.map-chip[data-hue="6"] { border-color: var(--map-hue-6); }
+.map-chip[data-hue="7"] { border-color: var(--map-hue-7); }
+.map-chip[data-hue="8"] { border-color: var(--map-hue-8); }
+
+.map-badge.is-warn { background: var(--color-warn-soft); border-color: var(--color-warn); }
+.map-badge.is-shared { background: var(--color-link-soft); border-color: var(--color-link); }
+
+.map-back { margin-bottom: var(--space-3); }
+
+.map-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-5);
+  margin: var(--space-3) 0;
+}
+
+.map-facts div { min-width: 6rem; }
+.map-facts dt { color: var(--color-muted); font-size: 0.8rem; }
+.map-facts dd { margin: 0; font-weight: 700; }
+
+.map-decision {
+  margin: var(--space-3) 0;
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+/* A decision in two or more modules gets a split (double) edge, a Shared badge and a named chip
+   per module: three channels besides colour. */
+.map-decision.is-shared {
+  border-left: 0.5rem double var(--color-link);
+}
+
+.map-decision.is-superseded { opacity: 0.7; }
+.map-decision header { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
+.map-decision p { margin: var(--space-2) 0; }
+.map-chips { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
+
+.map-files { columns: 2 22rem; font-size: 0.85rem; padding-left: var(--space-5); }
+.map-files li.is-anchored::marker { content: "✓ "; color: var(--color-accent); }
+
+/* What a person can do from a decision card: review it, or give it a module. */
+.map-acts { margin-top: var(--space-3); padding-top: var(--space-2); border-top: 1px solid var(--color-border); }
+
+.map-act {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+  margin-top: var(--space-2);
+}
+
+.map-act input[type="text"],
+.map-act select {
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  font: inherit;
+}
+
+.map-act input[hidden] { display: none; }
+.map-act .error { flex-basis: 100%; margin: 0; }
+
+.map-notice {
+  margin: var(--space-3) 0;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius);
+  background: var(--color-accent-soft);
+}
+
+.map-edit-link {
+  margin-left: var(--space-2);
+}

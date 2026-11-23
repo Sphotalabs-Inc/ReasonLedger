@@ -1,0 +1,84 @@
+{
+  "cases": [
+    {
+      "id": "payments-fail-unreviewed",
+      "change": {
+        "provenance": "ai_assisted",
+        "oversight": "merged_unreviewed",
+        "changed_paths": ["payments/charge.py"],
+        "author_login": "alice",
+        "approver_logins": [],
+        "codeowner_logins": ["payments-owner"]
+      },
+      "expected_overall": "fail",
+      "expected_rules": {
+        "payments-need-owner-review": "fail",
+        "ai-should-be-reviewed": "warn"
+      }
+    },
+    {
+      "id": "payments-pass-codeowner",
+      "change": {
+        "provenance": "ai_assisted",
+        "oversight": "reviewed",
+        "changed_paths": ["payments/charge.py"],
+        "author_login": "alice",
+        "approver_logins": ["payments-owner"],
+        "codeowner_logins": ["payments-owner"]
+      },
+      "expected_overall": "pass",
+      "expected_rules": {
+        "payments-need-owner-review": "pass",
+        "ai-should-be-reviewed": "pass"
+      }
+    },
+    {
+      "id": "payments-fail-author-only",
+      "change": {
+        "provenance": "ai_assisted",
+        "oversight": "reviewed",
+        "changed_paths": ["payments/charge.py"],
+        "author_login": "alice",
+        "approver_logins": ["alice"],
+        "codeowner_logins": ["payments-owner"]
+      },
+      "expected_overall": "fail",
+      "expected_rules": {
+        "payments-need-owner-review": "fail",
+        "ai-should-be-reviewed": "pass"
+      }
+    },
+    {
+      "id": "docs-warn-only",
+      "change": {
+        "provenance": "ai_assisted",
+        "oversight": "merged_unreviewed",
+        "changed_paths": ["docs/readme.md"],
+        "author_login": "bob",
+        "approver_logins": [],
+        "codeowner_logins": []
+      },
+      "expected_overall": "warn",
+      "expected_rules": {
+        "payments-need-owner-review": "skipped",
+        "ai-should-be-reviewed": "warn"
+      }
+    },
+    {
+      "id": "human-skipped",
+      "change": {
+        "provenance": "human",
+        "oversight": "n/a",
+        "changed_paths": ["payments/charge.py"],
+        "author_login": "carol",
+        "approver_logins": [],
+        "codeowner_logins": ["payments-owner"]
+      },
+      "expected_overall": "pass",
+      "expected_rules": {
+        "payments-need-owner-review": "skipped",
+        "ai-should-be-reviewed": "skipped"
+      }
+    }
+  ]
+}

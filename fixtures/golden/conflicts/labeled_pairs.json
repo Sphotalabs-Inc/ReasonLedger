@@ -1,0 +1,75 @@
+{
+  "description": "Labeled decision pairs for the conflict-quality gate. Conflicts are same-subject/opposite-choice; negatives are agreements or unrelated. Split into train and holdout; the gate is evaluated on holdout.",
+  "pairs": [
+    {
+      "id": "P1",
+      "split": "train",
+      "is_conflict": true,
+      "a": {"id": "a_retry_exp", "context": "Retry backoff strategy for payment webhook delivery", "choice": "Exponential backoff with jitter"},
+      "b": {"id": "b_retry_fixed", "context": "Retry backoff strategy for payment webhook delivery", "choice": "Fixed interval retries"}
+    },
+    {
+      "id": "P2",
+      "split": "holdout",
+      "is_conflict": true,
+      "a": {"id": "a_db_pg", "context": "Primary datastore for the orders service", "choice": "PostgreSQL relational database"},
+      "b": {"id": "b_db_mongo", "context": "Primary datastore for the orders service", "choice": "MongoDB document store"}
+    },
+    {
+      "id": "P3",
+      "split": "holdout",
+      "is_conflict": true,
+      "a": {"id": "a_cache_redis", "context": "Caching layer for the product catalog service", "choice": "Redis shared cache store"},
+      "b": {"id": "b_cache_mem", "context": "Caching layer for the product catalog service", "choice": "In-process memory cache"}
+    },
+    {
+      "id": "P4",
+      "split": "train",
+      "is_conflict": true,
+      "a": {"id": "a_auth_jwt", "context": "User authentication session token strategy", "choice": "Stateless JWT access tokens"},
+      "b": {"id": "b_auth_session", "context": "User authentication session token strategy", "choice": "Server-side session store"}
+    },
+    {
+      "id": "P5",
+      "split": "train",
+      "is_conflict": true,
+      "a": {"id": "a_api_rest", "context": "Public API interface style for external clients", "choice": "REST JSON endpoints"},
+      "b": {"id": "b_api_graphql", "context": "Public API interface style for external clients", "choice": "GraphQL single endpoint"}
+    },
+    {
+      "id": "N1",
+      "split": "holdout",
+      "is_conflict": false,
+      "a": {"id": "n_db_pg1", "context": "Primary datastore for the orders service", "choice": "PostgreSQL relational database primary store"},
+      "b": {"id": "n_db_pg2", "context": "Primary datastore for the orders service", "choice": "PostgreSQL relational database primary store"}
+    },
+    {
+      "id": "N2",
+      "split": "holdout",
+      "is_conflict": false,
+      "a": {"id": "n_retry", "context": "Retry backoff strategy for payment webhook delivery", "choice": "Exponential backoff with jitter"},
+      "b": {"id": "n_cache", "context": "Caching layer for the product catalog service", "choice": "Redis shared cache store"}
+    },
+    {
+      "id": "N3",
+      "split": "train",
+      "is_conflict": false,
+      "a": {"id": "n_auth", "context": "User authentication session token strategy", "choice": "Stateless JWT access tokens"},
+      "b": {"id": "n_queue", "context": "Background job queue for outbound email delivery", "choice": "Redis-backed task queue"}
+    },
+    {
+      "id": "N4",
+      "split": "train",
+      "is_conflict": false,
+      "a": {"id": "n_api", "context": "Public API interface style for external clients", "choice": "REST JSON endpoints"},
+      "b": {"id": "n_db", "context": "Primary datastore for the orders service", "choice": "PostgreSQL relational database"}
+    },
+    {
+      "id": "N5",
+      "split": "holdout",
+      "is_conflict": false,
+      "a": {"id": "n_cache_a", "context": "Caching layer for the product catalog service", "choice": "Redis shared cache store for the catalog"},
+      "b": {"id": "n_cache_b", "context": "Caching layer for the product catalog service", "choice": "Redis shared cache store for the catalog"}
+    }
+  ]
+}

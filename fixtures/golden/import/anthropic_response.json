@@ -1,0 +1,27 @@
+{
+  "id": "msg_fixture_001",
+  "type": "message",
+  "role": "assistant",
+  "model": "claude-sonnet-5",
+  "content": [
+    {
+      "type": "tool_use",
+      "id": "toolu_fixture_001",
+      "name": "extract_decisions",
+      "input": {
+        "decisions": [
+          {
+            "context": "Timestamp storage timezone policy",
+            "choice": "UTC",
+            "source_ref": "docs/policy.md#timestamps",
+            "alternatives_rejected": ["server-local"],
+            "assumptions": [],
+            "justifies": ["backend/app/date_utils.py"],
+            "confidence": "high"
+          }
+        ]
+      }
+    }
+  ],
+  "stop_reason": "tool_use"
+}

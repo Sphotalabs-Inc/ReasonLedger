@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ReasonLedger</title>
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/map.css" />
+    <link rel="stylesheet" href="/organize.css" />
+    <link rel="stylesheet" href="/review.css" />
+    <link rel="stylesheet" href="/stats.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-header-inner">
+        <img src="__RL_LOGO_SRC__" alt="ReasonLedger" class="logo" />
+        <nav class="top-tabs" id="top-tabs" hidden aria-label="Primary">
+          <button type="button" class="top-tab is-active" data-tab="overview">Overview</button>
+          <button type="button" class="top-tab" data-tab="review">Review</button>
+          <button type="button" class="top-tab" data-tab="conflicts">Conflicts</button>
+          <button type="button" class="top-tab" data-tab="ask">Ask</button>
+          <button type="button" class="top-tab" data-tab="map">Map</button>
+          <button type="button" class="top-tab" data-tab="settings">Settings</button>
+        </nav>
+      </div>
+    </header>
+    <main id="app">
+      <p class="muted" id="loading">Loading…</p>
+    </main>
+    <div id="overview-pane" hidden></div>
+    <div id="conflicts-pane" hidden></div>
+    <div id="ask-pane" hidden></div>
+    <div id="map-mode" class="map-mode" role="group" aria-label="Map view" hidden>
+      <button type="button" class="secondary" data-map-mode="map">Map</button>
+      <button type="button" class="secondary" data-map-mode="organize">Edit map</button>
+    </div>
+    <div id="map-pane" class="map-pane" hidden></div>
+    <div id="organize-pane" class="map-pane" hidden></div>
+    <div id="settings-pane" class="settings-pane" hidden></div>
+    <details class="legend">
+      <summary>What do these states mean?</summary>
+      <dl>
+        <dt>proposed</dt>
+        <dd>
+          Extracted from your docs and waiting for you. It is <em>not</em> in the ledger yet
+          and counts as evidence of nothing until you confirm it.
+        </dd>
+        <dt>confirmed</dt>
+        <dd>
+          You reviewed it and accepted it. This is the human-oversight step the ledger
+          exists to record — who accepted the decision, and when.
+        </dd>
+        <dt>active</dt>
+        <dd>
+          A decision in force, recorded directly (by an agent or a person) rather than
+          through doc import. It is listed under Decisions, never under Proposals.
+        </dd>
+        <dt>pending review</dt>
+        <dd>
+          Recorded, but no person has judged it yet, so nobody has vouched for it. Read
+          it, then Approve it here or run <code>reasonledger approve</code>.
+        </dd>
+        <dt>agreed</dt>
+        <dd>
+          Whose idea the choice was: a person stated it or explicitly accepted it before
+          the agent acted. Separate from review — an agreed decision can still be pending.
+        </dd>
+        <dt>recommended</dt>
+        <dd>
+          Whose idea the choice was: the agent chose or proposed it. A person may approve
+          it later; it stays recommended, because that is where it came from.
+        </dd>
+        <dt>superseded</dt>
+        <dd>
+          Replaced by another decision — one written to replace it, or one a person chose
+          to keep when two clashed. It is kept, never deleted: the trail has to show
+          what was believed before and when it changed.
+        </dd>
+        <dt>retired</dt>
+        <dd>
+          Taken out of force by a person, with a reason. It is kept as history and shown
+          here and in <code>why</code>, but it is no longer guidance and is left out of conflicts.
+        </dd>
+        <dt>stale</dt>
+        <dd>
+          Still in the ledger, but an assumption it depended on no longer holds — either
+          marked stale, or a watcher condition has been breached. Worth re-deciding.
+        </dd>
+        <dt>replaces <code>dec_…</code></dt>
+        <dd>
+          The doc behind an already-confirmed decision changed. Confirming this proposal
+          retires the old decision; rejecting it leaves the old one untouched.
+        </dd>
+        <dt>orphaned</dt>
+        <dd>
+          The decision names a file that is no longer in the repo — usually a refactor
+          or deletion. The decision may still be sound; its pointer is not. Re-target
+          it or retire it.
+        </dd>
+        <dt>conflicts</dt>
+        <dd>
+          Pairs a model judged to answer the same question in ways that clash. Related
+          decisions that are not judged yet are only similar topics — run
+          <code>reasonledger judge</code> to check them.
+        </dd>
+        <dt>whole file only</dt>
+        <dd>
+          In “Why”, a decision anchored to a file rather than a function or line range.
+          It describes the file, not necessarily the exact code you asked about.
+        </dd>
+      </dl>
+    </details>
+    <script type="application/json" id="rl-bootstrap">
+      __RL_BOOTSTRAP_JSON__
+    </script>
+    <script src="/provenance.js"></script>
+    <script src="/render.js"></script>
+    <script src="/api.js"></script>
+    <script src="/browse_refs.js"></script>
+    <script src="/browse.js"></script>
+    <script src="/needs.js"></script>
+    <script src="/review.js"></script>
+    <script src="/ledger_list.js"></script>
+    <script src="/conflicts.js"></script>
+    <script src="/stats.js"></script>
+    <script src="/ask.js"></script>
+    <script src="/overview.js"></script>
+    <script src="/judge.js"></script>
+    <script src="/map.js"></script>
+    <script src="/map_actions.js"></script>
+    <script src="/map_page.js"></script>
+    <script src="/organize_ui.js"></script>
+    <script src="/organize_actions.js"></script>
+    <script src="/organize_inbox_ui.js"></script>
+    <script src="/organize_inbox.js"></script>
+    <script src="/organize_decisions.js"></script>
+    <script src="/organize.js"></script>
+    <script src="/app.js"></script>
+    <script src="/config.js"></script>
+    <script src="/conflict_config.js"></script>
+    <script src="/setup.js"></script>
+    <script src="/consent.js"></script>
+    <script src="/agent_card.js"></script>
+  </body>
+</html>

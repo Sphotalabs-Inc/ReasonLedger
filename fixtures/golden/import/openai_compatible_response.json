@@ -1,0 +1,15 @@
+{
+  "id": "chatcmpl-fixture-001",
+  "object": "chat.completion",
+  "model": "gpt-4o-mini",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\"decisions\":[{\"context\":\"Timestamp storage timezone policy\",\"choice\":\"UTC\",\"source_ref\":\"docs/policy.md#timestamps\",\"alternatives_rejected\":[\"server-local\"],\"assumptions\":[],\"justifies\":[\"backend/app/date_utils.py\"],\"confidence\":\"high\"}]}"
+      },
+      "finish_reason": "stop"
+    }
+  ]
+}

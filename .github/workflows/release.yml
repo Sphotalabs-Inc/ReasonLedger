@@ -1,0 +1,170 @@
+name: Release
+
+# A `v*` tag publishes to PyPI. Pushing the tag is the maintainer's step; nothing here runs on
+# a branch push. Run it by hand (workflow_dispatch) to rehearse: a manual run can only reach
+# TestPyPI, so PyPI is reachable only through a tag that points at a commit on main.
+#
+# Publishing uses PyPI Trusted Publishing (OIDC): no token lives in this repo. One-time setup on
+# pypi.org / test.pypi.org, add a trusted publisher for this repository and workflow
+# `release.yml` for each package. PyPI allows one publisher per repository, workflow and
+# environment, so each package has its own environment:
+#
+#   package             PyPI          TestPyPI
+#   reasonledger-core   pypi-core     testpypi-core
+#   reasonledger        pypi          testpypi
+#   reasonledger-mcp    pypi-mcp      testpypi-mcp
+#
+# Create the same six environments under the repository's Settings > Environments, and make the
+# maintainer a required reviewer on the three `pypi*` ones: the environment is the last gate
+# before an upload.
+#
+# Every action below is pinned to a commit, because the publishing jobs hold `id-token: write`
+# and a moved tag would run someone else's code with it. The comment names the tag it was taken
+# from; bump the SHA and the comment together.
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  # The floor is 3.12 (pyproject). Without this, runners pick their newest Python, for which
+  # compiled dependencies publish no wheel; ci.yml carries the same pin for the same reason.
+  UV_PYTHON: "3.12"
+  INDEX: ${{ github.event_name == 'push' && 'pypi' || 'testpypi' }}
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          # The tag-on-main check below needs main's history, not just the tagged commit.
+          fetch-depth: 0
+
+      - uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5
+        with:
+          enable-cache: true
+
+      # A version can never be reused on PyPI, and the upload takes its number from pyproject.toml,
+      # not from the tag. A tag that disagrees stops here, before anything is built. A rehearsal
+      # (workflow_dispatch) has no tag.
+      - name: Tag matches the package versions
+        if: github.event_name == 'push'
+        run: uv run --no-project python scripts/check_release_tag.py "$GITHUB_REF_NAME"
+
+      # A tag can be pushed on any commit. Only one that main already contains has been through
+      # review and CI, so anything else stops here.
+      - name: Tag is on main
+        if: github.event_name == 'push'
+        run: |
+          git merge-base --is-ancestor "$GITHUB_SHA" origin/main || {
+            echo "::error::tag $GITHUB_REF_NAME points at $GITHUB_SHA, which is not on main"
+            exit 1
+          }
+
+      - name: Install Python dependencies
+        run: uv sync --all-packages --dev
+
+      # Lint, types, phases 1-5 and scripts/check_dists.sh: the same command the maintainer runs.
+      # DIST_DIR makes check_dists.sh build into dist/ and test those files, so what is uploaded
+      # below is exactly what was installed and exercised, not a second build of the same source.
+      - name: Release gate
+        run: DIST_DIR="$PWD/dist" ./scripts/release_gate.sh
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: dist
+          path: dist/
+
+  publish-core:
+    needs: gate
+    runs-on: ubuntu-latest
+    environment: ${{ github.event_name == 'push' && 'pypi-core' || 'testpypi-core' }}
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: dist
+          path: dist/
+
+      - uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5
+
+      - name: Publish reasonledger-core
+        run: >
+          uv publish --trusted-publishing always
+          ${{ env.INDEX == 'testpypi' && '--publish-url https://test.pypi.org/legacy/' || '' }}
+          dist/reasonledger_core-*
+
+  # One package at a time, each after the one it declares a version range against: the MCP server
+  # needs core, and the CLI needs both. An index cannot resolve a range until its target is there,
+  # so publishing the CLI first would leave `reasonledger` uninstallable until the MCP server lands.
+  publish-mcp:
+    needs: publish-core
+    runs-on: ubuntu-latest
+    environment: ${{ github.event_name == 'push' && 'pypi-mcp' || 'testpypi-mcp' }}
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: dist
+          path: dist/
+
+      - uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5
+
+      - name: Publish reasonledger-mcp
+        run: >
+          uv publish --trusted-publishing always
+          ${{ env.INDEX == 'testpypi' && '--publish-url https://test.pypi.org/legacy/' || '' }}
+          dist/reasonledger_mcp-*
+
+  publish-app:
+    needs: [publish-core, publish-mcp]
+    runs-on: ubuntu-latest
+    environment: ${{ github.event_name == 'push' && 'pypi' || 'testpypi' }}
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: dist
+          path: dist/
+
+      - uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5
+
+      - name: Publish reasonledger
+        run: >
+          uv publish --trusted-publishing always
+          ${{ env.INDEX == 'testpypi' && '--publish-url https://test.pypi.org/legacy/' || '' }}
+          dist/reasonledger-0*
+
+  # What a stranger does, on the operating systems strangers use, against the index that was
+  # just published to. Nothing from this checkout is installed: the checkout supplies only the
+  # script. This runs after the upload, so a red job cannot take the version back: it means do not
+  # hand this version to anyone, and ship the next pre-release. The index may lag an upload, so
+  # the script retries the first install for a bounded time.
+  verify:
+    needs: [publish-app, publish-mcp]
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5
+
+      - name: Verify the published version
+        shell: bash
+        run: |
+          version_args=()
+          if [ "${{ github.event_name }}" = "push" ]; then
+            version_args=(--version "${GITHUB_REF_NAME#v}")
+          fi
+          uv run --no-project python scripts/verify_published.py --index "$INDEX" "${version_args[@]}"

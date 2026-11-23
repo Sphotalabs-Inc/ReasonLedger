@@ -1,0 +1,56 @@
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "reasonledger-core"
+version = "0.3.0a6"
+description = "Framework-free domain logic for ReasonLedger"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+authors = [{ name = "SphotaLabs Inc." }]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Quality Assurance",
+    "Typing :: Typed",
+]
+dependencies = [
+    "numpy>=2.0,<3",
+    "pydantic>=2.10",
+    "pydantic-settings>=2.7",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+embeddings = [
+    "fastembed>=0.5",
+]
+dev = [
+    "pytest>=8.3",
+    "pytest-cov>=6.0",
+    "hypothesis>=6.120",
+]
+
+[project.urls]
+Homepage = "https://github.com/Sphotalabs-Inc/ReasonLedger"
+Repository = "https://github.com/Sphotalabs-Inc/ReasonLedger"
+Issues = "https://github.com/Sphotalabs-Inc/ReasonLedger/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/reasonledger_core"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-q --strict-markers"
+
+[tool.coverage.run]
+source = ["reasonledger_core"]
+branch = true

@@ -1,0 +1,20 @@
+---
+description: ReasonLedger global engineering rules — always applied
+alwaysApply: true
+---
+
+# ReasonLedger — always-on rules
+
+Follow **`AGENTS.md`** (repo root) as the canonical engineering charter and `docs/` for what the product does. Non-negotiables:
+
+- **When in doubt, ASK** — never guess on scope, security, data handling, or architecture.
+- **One slice at a time:** implement exactly the current slice named in the prompt (e.g. P0-1, then P0-2). Do not start the next slice until told. Finish by running the gate, showing results, and STOPPING for review.
+- **No scope drift:** change ONLY the files the current slice requires. If you believe another file needs changing, list it and ask first — do not edit it. Repositioning/string changes happen only in the slice that owns them.
+- **Phase gate:** prior suites (`phase_1`..`phase_4`) MUST stay green; don't advance until they are.
+- **Security & data minimization are first-class:** least-privilege scopes, no secrets in code, never store source code, never log PII.
+- **No dead code, no hard-coding, DRY.** Files ≤300 lines (hard cap 400). Domain logic in `packages/core` (framework-free); apps stay thin.
+- **Centralized theme** — design tokens only, no hard-coded colors or inline styles. Pinned stack — don't substitute without asking.
+- **Tests alongside code**, deterministic (no live network/LLM in CI), ≥80% coverage (100% on policy/PII).
+- **We dogfood ReasonLedger — capture is mandatory (`AGENTS.md` §10).** Before deciding, call MCP `query_decisions` (`semantic: true`). After a choice between viable alternatives that changed the code, call `record_decision`. Narrow trigger: no renames, formatting, mechanical refactors, or instructions you merely carried out. Three hard field rules — `context` ≠ `choice`, `justifies` uses line/symbol loci not bare file paths, `alternatives_rejected` non-empty. §10 says what breaks otherwise.
+
+See `AGENTS.md` for the full charter: stack, repo structure, frontend/backend specifics, and workflow.

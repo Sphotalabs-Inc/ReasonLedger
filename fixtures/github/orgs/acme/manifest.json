@@ -1,0 +1,17 @@
+{
+  "org_slug": "acme",
+  "org_name": "Acme Corp",
+  "critical_path_globs": ["payments/**", "auth/**"],
+  "repositories": [
+    {
+      "name": "payments-service",
+      "default_branch": "main",
+      "pulls": [42, 17]
+    },
+    {
+      "name": "docs-site",
+      "default_branch": "main",
+      "pulls": [3]
+    }
+  ]
+}

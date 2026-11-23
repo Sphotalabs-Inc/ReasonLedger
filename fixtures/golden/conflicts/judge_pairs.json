@@ -1,0 +1,335 @@
+{
+  "description": "Hand-labelled pairs for the related-decision judge. Labels are a human's call: a conflict means both decisions answer the same question and both answers cannot hold. Negatives deliberately include same-project pairs that share vocabulary or a templated context, the failure mode of similarity-only detection. Model verdicts for these pairs live in judge_verdicts.json, recorded by scripts/record_judge_verdicts.py.",
+  "pairs": [
+    {
+      "id": "C01",
+      "is_conflict": true,
+      "note": "classic opposing choice",
+      "a": {
+        "id": "dec_c01a",
+        "context": "Retry backoff strategy for payment webhook delivery",
+        "choice": "Exponential backoff with jitter"
+      },
+      "b": {
+        "id": "dec_c01b",
+        "context": "Retry backoff strategy for payment webhook delivery",
+        "choice": "Fixed interval retries every 30 seconds"
+      }
+    },
+    {
+      "id": "C02",
+      "is_conflict": true,
+      "note": "classic opposing choice",
+      "a": {
+        "id": "dec_c02a",
+        "context": "Primary datastore for the orders service",
+        "choice": "PostgreSQL relational database"
+      },
+      "b": {
+        "id": "dec_c02b",
+        "context": "Primary datastore for the orders service",
+        "choice": "MongoDB document store"
+      }
+    },
+    {
+      "id": "C03",
+      "is_conflict": true,
+      "note": "same question, different wording",
+      "a": {
+        "id": "dec_c03a",
+        "context": "User authentication session token strategy",
+        "choice": "Stateless JWT access tokens"
+      },
+      "b": {
+        "id": "dec_c03b",
+        "context": "How should logged-in sessions be tracked?",
+        "choice": "Server-side session store keyed by an opaque cookie"
+      }
+    },
+    {
+      "id": "C04",
+      "is_conflict": true,
+      "note": "same question, different wording",
+      "a": {
+        "id": "dec_c04a",
+        "context": "Public API interface style for external clients",
+        "choice": "REST JSON endpoints"
+      },
+      "b": {
+        "id": "dec_c04b",
+        "context": "Which API style do partners integrate against?",
+        "choice": "A single GraphQL endpoint; no REST surface"
+      }
+    },
+    {
+      "id": "C05",
+      "is_conflict": true,
+      "note": "replacement pair, both live",
+      "a": {
+        "id": "dec_c05a",
+        "context": "How are agents restricted to local models kept from reaching cloud models if policy code has a bug?",
+        "choice": "Run a separate runtime instance per trust domain; the restricted one has no network route to cloud model APIs"
+      },
+      "b": {
+        "id": "dec_c05b",
+        "context": "With each agent running its own process, how are restricted agents kept from cloud models even if application code has a bug?",
+        "choice": "One container per agent with an egress allowlist, plus a gateway that enforces the tier ceiling on every call"
+      }
+    },
+    {
+      "id": "C06",
+      "is_conflict": true,
+      "note": "replacement pair, both live",
+      "a": {
+        "id": "dec_c06a",
+        "context": "Which agent runtime should host the specialist agents?",
+        "choice": "Wrap a third-party runtime behind an adapter and pick one by a scored bake-off"
+      },
+      "b": {
+        "id": "dec_c06b",
+        "context": "Which agent loop should the specialist agents run on?",
+        "choice": "Our own agent loop in a shared core; no third-party agent runtime"
+      }
+    },
+    {
+      "id": "C07",
+      "is_conflict": true,
+      "note": "classic opposing choice",
+      "a": {
+        "id": "dec_c07a",
+        "context": "Timezone for stored timestamps",
+        "choice": "Store every timestamp in UTC"
+      },
+      "b": {
+        "id": "dec_c07b",
+        "context": "Timezone for stored timestamps",
+        "choice": "Store timestamps in the server's local zone"
+      }
+    },
+    {
+      "id": "C08",
+      "is_conflict": true,
+      "note": "replacement-style, opposing",
+      "a": {
+        "id": "dec_c08a",
+        "context": "Which chat channel carries private conversations with the assistant?",
+        "choice": "A Telegram bot"
+      },
+      "b": {
+        "id": "dec_c08b",
+        "context": "Which chat channel carries private conversations with the assistant?",
+        "choice": "A self-hosted Matrix homeserver with end-to-end encrypted rooms; the Telegram bot is retired"
+      }
+    },
+    {
+      "id": "C09",
+      "is_conflict": true,
+      "note": "opposing choice",
+      "a": {
+        "id": "dec_c09a",
+        "context": "Where do service credentials live at runtime?",
+        "choice": "Environment variables injected by the deploy pipeline; nothing secret in the repository"
+      },
+      "b": {
+        "id": "dec_c09b",
+        "context": "Where do service credentials live at runtime?",
+        "choice": "An encrypted credentials file committed to the repository and decrypted at start-up"
+      }
+    },
+    {
+      "id": "C10",
+      "is_conflict": true,
+      "note": "opposing choice",
+      "a": {
+        "id": "dec_c10a",
+        "context": "How are background jobs scheduled?",
+        "choice": "A single cron container that runs every job on a fixed schedule"
+      },
+      "b": {
+        "id": "dec_c10b",
+        "context": "How are background jobs scheduled?",
+        "choice": "An event-driven queue; no scheduled jobs at all"
+      }
+    },
+    {
+      "id": "N01",
+      "is_conflict": false,
+      "note": "different layers: toolchain vs domain state machine",
+      "a": {
+        "id": "dec_n01a",
+        "context": "The first draft assumed a Node backend; which language should the core, control plane and agents use?",
+        "choice": "Python 3.12 with uv, Pydantic, FastAPI, ruff, strict mypy, pytest, hypothesis and import-linter, except the web UI"
+      },
+      "b": {
+        "id": "dec_n01b",
+        "context": "The registry tracks agents and offers pause and resume, but the owner cannot switch an agent off apart from a security hold.",
+        "choice": "Four lifecycle states: registered, enabled (step-up to enable), disabled (owner's choice, credentials withdrawn), paused (kill switch, step-up to resume); the router uses only enabled agents"
+      }
+    },
+    {
+      "id": "N02",
+      "is_conflict": false,
+      "note": "templated contexts, different subsystems",
+      "a": {
+        "id": "dec_n02a",
+        "context": "How should the first milestone implement the vault so ingest redaction and step-up reveal work before chat and the database exist?",
+        "choice": "Detectors replace secrets with typed placeholders at ingest; an in-memory store seals values under an injected key; a broker reveals plaintext only to a dedicated channel after step-up and auto-redacts after a TTL"
+      },
+      "b": {
+        "id": "dec_n02b",
+        "context": "How should the first milestone implement the approval gate and audit log before the database and chat channels exist?",
+        "choice": "An in-memory approval service binds approve and consume to a SHA-256 of action plus payload, an outbound gate enforces it, and a hash-chained in-memory audit log records decisions but never draft payloads"
+      }
+    },
+    {
+      "id": "N03",
+      "is_conflict": false,
+      "note": "templated contexts, different subsystems",
+      "a": {
+        "id": "dec_n03a",
+        "context": "How should the first milestone implement the credential broker before live OAuth and the database exist?",
+        "choice": "Tokens are stored encrypted per provider, owner and account; agents check out access tokens only; disabling an agent withdraws its grants"
+      },
+      "b": {
+        "id": "dec_n03b",
+        "context": "How should the first milestone implement usage metering before the database exists?",
+        "choice": "A usage-recorder protocol in core with an in-memory implementation; database-backed rows wait for the first migration"
+      }
+    },
+    {
+      "id": "N04",
+      "is_conflict": false,
+      "note": "refinement of the first decision",
+      "a": {
+        "id": "dec_n04a",
+        "context": "Cloud models leak sensitive data; how should data decide which model may process it?",
+        "choice": "Four sensitivity tiers where the tier sets a model ceiling: restricted data is local-only and unknown data defaults to restricted"
+      },
+      "b": {
+        "id": "dec_n04b",
+        "context": "When a caller asks for cloud inference on a restricted payload, should the call be denied or served locally?",
+        "choice": "Force the destination to local and allow the call, so restricted work completes without touching a cloud adapter"
+      }
+    },
+    {
+      "id": "N05",
+      "is_conflict": false,
+      "note": "implementation of the first decision",
+      "a": {
+        "id": "dec_n05a",
+        "context": "How should approvals bind to outbound actions so an approved draft cannot be altered before it executes?",
+        "choice": "Every outbound action needs an approval bound to the content hash of the exact action; edits create a new hash"
+      },
+      "b": {
+        "id": "dec_n05b",
+        "context": "How should the first milestone implement the approval gate before the database exists?",
+        "choice": "An in-memory approval service binds approve and consume to a SHA-256 of action plus payload"
+      }
+    },
+    {
+      "id": "N06",
+      "is_conflict": false,
+      "note": "different layers of the same channel",
+      "a": {
+        "id": "dec_n06a",
+        "context": "Which homeserver should the chat channel use, and how far should the first milestone go before encryption is verified?",
+        "choice": "A lightweight self-hosted homeserver with federation and registration disabled, bound to localhost"
+      },
+      "b": {
+        "id": "dec_n06b",
+        "context": "How should the bot send and receive in encrypted rooms once the homeserver is up?",
+        "choice": "An end-to-end encryption client with a persistent key store that refuses to send into unencrypted rooms"
+      }
+    },
+    {
+      "id": "N07",
+      "is_conflict": false,
+      "note": "sequenced: one defers to the other",
+      "a": {
+        "id": "dec_n07a",
+        "context": "Where should the first agent registry live before the database migration exists?",
+        "choice": "An in-memory registry with the lifecycle rules; storage is replaced by the migration later"
+      },
+      "b": {
+        "id": "dec_n07b",
+        "context": "How should the single first-milestone database migration be shaped?",
+        "choice": "One revision creating the control-plane tables with append-only audit triggers and row-level security per owner"
+      }
+    },
+    {
+      "id": "N08",
+      "is_conflict": false,
+      "note": "paraphrased agreement",
+      "a": {
+        "id": "dec_n08a",
+        "context": "Primary datastore for the orders service",
+        "choice": "PostgreSQL relational database"
+      },
+      "b": {
+        "id": "dec_n08b",
+        "context": "Primary datastore for the orders service",
+        "choice": "PostgreSQL relational database as the primary store"
+      }
+    },
+    {
+      "id": "N09",
+      "is_conflict": false,
+      "note": "unrelated",
+      "a": {
+        "id": "dec_n09a",
+        "context": "Retry backoff strategy for payment webhook delivery",
+        "choice": "Exponential backoff with jitter"
+      },
+      "b": {
+        "id": "dec_n09b",
+        "context": "Caching layer for the product catalog service",
+        "choice": "Redis shared cache store"
+      }
+    },
+    {
+      "id": "N10",
+      "is_conflict": false,
+      "note": "shared vocabulary, different questions",
+      "a": {
+        "id": "dec_n10a",
+        "context": "How should the uv workspace map onto the layering rules so import-linter can enforce boundaries?",
+        "choice": "A multi-package workspace with separate members for core, control plane and each agent"
+      },
+      "b": {
+        "id": "dec_n10b",
+        "context": "Where should the chat bot be wired given import-linter forbids channels from importing the control plane?",
+        "choice": "Put the front door in the channels package and inject command handlers, bound later by a composition root"
+      }
+    },
+    {
+      "id": "N11",
+      "is_conflict": false,
+      "note": "complementary routing decisions",
+      "a": {
+        "id": "dec_n11a",
+        "context": "Routing every message through the master agent adds delay; what should classify the target agent?",
+        "choice": "Route on the local model with schema-constrained output; explicit commands bypass the model"
+      },
+      "b": {
+        "id": "dec_n11b",
+        "context": "With many specialist agents, how should the owner interact without losing cross-context awareness?",
+        "choice": "One front-door agent routes requests and can hand the owner off into a direct session"
+      }
+    },
+    {
+      "id": "N12",
+      "is_conflict": false,
+      "note": "different questions in the same security area",
+      "a": {
+        "id": "dec_n12a",
+        "context": "Should the master agent read specialists' raw records to answer cross-context questions?",
+        "choice": "Specialists keep raw data in their own namespaces; the master stores only validated digests"
+      },
+      "b": {
+        "id": "dec_n12b",
+        "context": "Who decides whether an agent may access data or tools, and who watches for misuse?",
+        "choice": "A deterministic default-deny policy engine at one enforcement point; a separate watcher only pauses and alerts"
+      }
+    }
+  ]
+}

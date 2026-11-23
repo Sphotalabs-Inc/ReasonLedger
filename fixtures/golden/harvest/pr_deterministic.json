@@ -1,0 +1,6 @@
+{
+  "title": "Use exponential backoff for payment retries",
+  "body": "## Decision: payment retry policy\n\nChoice: Exponential backoff with jitter\nAlternatives rejected: Fixed interval retries, Immediate retry storm\nAssumptions: Provider is at-least-once\nAI tool: claude-code\nModel: claude-opus-4-8\nJustifies: payments/retry.py:40-72\n",
+  "diff": "diff --git a/payments/retry.py b/payments/retry.py\n+++ b/payments/retry.py\n@@ -40,0 +40,3 @@\n+def backoff():\n+    pass\n",
+  "decision_id": "dec_harvest1"
+}

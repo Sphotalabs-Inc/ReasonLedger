@@ -1,0 +1,34 @@
+{
+  "number": 42,
+  "state": "closed",
+  "merged": true,
+  "merged_at": "2026-03-15T14:22:00Z",
+  "title": "Add retry logic to payment processor",
+  "user": { "login": "github-copilot[bot]" },
+  "merged_by": { "login": "bob" },
+  "head": { "ref": "copilot/retry-logic" },
+  "labels": [{ "name": "ai-assisted" }],
+  "reviews": [
+    {
+      "user": { "login": "bob" },
+      "state": "APPROVED",
+      "submitted_at": "2026-03-15T13:00:00Z"
+    }
+  ],
+  "commits": [
+    {
+      "sha": "abc111",
+      "commit": {
+        "message": "feat: add retry logic\n\nCo-Authored-By: GitHub Copilot"
+      },
+      "author": { "login": "github-copilot[bot]" },
+      "committer": { "login": "github-copilot[bot]" }
+    }
+  ],
+  "files": [
+    {
+      "filename": "payments/retry.py",
+      "patch": "@@ -0,0 +1,3 @@\n+def retry():\n+    pass"
+    }
+  ]
+}

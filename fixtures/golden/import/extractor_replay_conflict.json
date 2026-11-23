@@ -1,0 +1,18 @@
+{
+  "claude.md": [
+    {
+      "context": "Timestamp storage timezone policy",
+      "choice": "UTC",
+      "source_ref": "claude.md#timestamps",
+      "justifies": ["backend/app/date_utils.py"]
+    }
+  ],
+  "backend/docs/date-semantics.md": [
+    {
+      "context": "Timestamp storage timezone policy",
+      "choice": "server-local",
+      "source_ref": "backend/docs/date-semantics.md#timestamps",
+      "justifies": ["backend/app/date_utils.py"]
+    }
+  ]
+}

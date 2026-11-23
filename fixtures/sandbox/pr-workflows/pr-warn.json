@@ -1,0 +1,8 @@
+{
+  "provenance": "ai_assisted",
+  "oversight": "merged_unreviewed",
+  "changed_paths": ["docs/readme.md"],
+  "author_login": "bob",
+  "approver_logins": [],
+  "codeowner_logins": []
+}

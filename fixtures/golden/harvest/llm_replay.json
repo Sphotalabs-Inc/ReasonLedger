@@ -1,0 +1,16 @@
+{
+  "frontmatter": {
+    "id": "dec_llm001",
+    "ai_tool": "cursor",
+    "model": "gpt-4.1",
+    "oversight": "reviewed",
+    "approved_by": null,
+    "justifies": ["auth/session.py:10-20"],
+    "confidence": "llm-extracted",
+    "context": "Session cookie flags",
+    "choice": "HttpOnly + Secure + SameSite=Lax",
+    "alternatives_rejected": ["SameSite=None without Secure"],
+    "assumptions": ["Browsers honor SameSite"]
+  },
+  "body": "## Context\n\nSession cookie flags\n\n## Choice\n\nHttpOnly + Secure + SameSite=Lax\n"
+}

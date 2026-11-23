@@ -1,0 +1,3 @@
+# Per-repo ReasonLedger settings. Every key is optional; `reasonledger config` writes the model
+# extractor here, and `metrics: true` turns on local, opt-in usage metrics that never leave this
+# machine.

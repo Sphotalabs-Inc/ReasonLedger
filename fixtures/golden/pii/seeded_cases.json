@@ -1,0 +1,124 @@
+{
+  "cases": [
+    {
+      "id": "email-in-body",
+      "text": "Contact bob@example.com for details",
+      "allow_emails": [],
+      "expect_rule_ids": ["email"]
+    },
+    {
+      "id": "allowed-approver-email",
+      "text": "Reviewed by alice@acme.com",
+      "allow_emails": ["alice@acme.com"],
+      "expect_rule_ids": []
+    },
+    {
+      "id": "digit-run-not-card",
+      "text": "Build number 4111111111111111 without separators",
+      "allow_emails": [],
+      "expect_rule_ids": []
+    },
+    {
+      "id": "phone",
+      "text": "Call 415-555-1212 if needed",
+      "allow_emails": [],
+      "expect_rule_ids": ["phone"]
+    },
+    {
+      "id": "ssn",
+      "text": "SSN 123-45-6789 must not appear",
+      "allow_emails": [],
+      "expect_rule_ids": ["ssn"]
+    },
+    {
+      "id": "credit-card",
+      "text": "Card 4111-1111-1111-1111",
+      "allow_emails": [],
+      "expect_rule_ids": ["credit_card"]
+    },
+    {
+      "id": "api-key",
+      "text": "key sk-abcdefghijklmnopqrstuvwxyz012345",
+      "allow_emails": [],
+      "expect_rule_ids": ["api_key"]
+    },
+    {
+      "id": "api-key-anthropic",
+      "text": "key sk-ant-api03-abcdefghijklmnopqrstuvwxyz_0123456789-AAAA",
+      "allow_emails": [],
+      "expect_rule_ids": ["api_key"]
+    },
+    {
+      "id": "api-key-openai-project",
+      "text": "key sk-proj-abcdefghij_klmnopqrstuvwxyz-0123456789",
+      "allow_emails": [],
+      "expect_rule_ids": ["api_key"]
+    },
+    {
+      "id": "api-key-github-fine-grained",
+      "text": "token github_pat_11ABCDEFG0abcdefghijklmnopqrstuvwxyz",
+      "allow_emails": [],
+      "expect_rule_ids": ["api_key"]
+    },
+    {
+      "id": "api-key-github-classic-other-prefix",
+      "text": "token gho_abcdefghijklmnopqrstuvwxyz0123456789",
+      "allow_emails": [],
+      "expect_rule_ids": ["api_key"]
+    },
+    {
+      "id": "api-key-slack",
+      "text": "token xoxb-1234567890-abcdefghijklmnop",
+      "allow_emails": [],
+      "expect_rule_ids": ["api_key"]
+    },
+    {
+      "id": "api-key-jwt",
+      "text": "header eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.abcdefghijklmnopqrstuv",
+      "allow_emails": [],
+      "expect_rule_ids": ["api_key"]
+    },
+    {
+      "id": "private-key-header",
+      "text": "-----BEGIN RSA PRIVATE KEY----- pasted by mistake",
+      "allow_emails": [],
+      "expect_rule_ids": ["api_key"]
+    },
+    {
+      "id": "phone-parenthesised",
+      "text": "Call (415) 555-1212 if needed",
+      "allow_emails": [],
+      "expect_rule_ids": ["phone"]
+    },
+    {
+      "id": "unix-timestamp-not-phone",
+      "text": "The cache entry expires at 1731500000 and again at 1731500000123",
+      "allow_emails": [],
+      "expect_rule_ids": []
+    },
+    {
+      "id": "grouped-count-not-phone",
+      "text": "Cap the table at 512 000 0000 rows",
+      "allow_emails": [],
+      "expect_rule_ids": []
+    },
+    {
+      "id": "ssh-remote-not-email",
+      "text": "Clone with git@github.com:example-org/example-repo.git",
+      "allow_emails": [],
+      "expect_rule_ids": []
+    },
+    {
+      "id": "product-words-with-sk-not-key",
+      "text": "The task-queue and risk-assessment-framework-for-retries modules",
+      "allow_emails": [],
+      "expect_rule_ids": []
+    },
+    {
+      "id": "clean",
+      "text": "Use exponential backoff with jitter",
+      "allow_emails": [],
+      "expect_rule_ids": []
+    }
+  ]
+}

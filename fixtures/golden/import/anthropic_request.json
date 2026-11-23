@@ -1,0 +1,42 @@
+{
+  "model": "claude-sonnet-5",
+  "max_tokens": 4096,
+  "system": "You extract genuine engineering decisions from project prose — documentation, or a\ncommit message explaining why a change was made.\n\nA decision is a choice made among alternatives — not a fact, tutorial, or TODO.\n\nRules:\n- Extract only real decisions (context + chosen option + rejected alternatives when stated).\n- Set a unique source_ref per decision as \"<source-path>#<slug-of-heading-or-topic>\"\n  (path from the prompt; a source starting \"git:\" is a commit, which has no headings).\n- justifies: file paths only when the source names them — never invent line numbers or loci.\n- Include no PII (names, emails, tokens, internal URLs with credentials).\n- decisions: [] is valid when the source contains no decisions. A commit that only\n  describes what changed, without saying why, contains no decision.\n",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Document path: docs/policy.md\n\n# Timestamps\nWe store all timestamps in UTC."
+    }
+  ],
+  "tools": [
+    {
+      "name": "extract_decisions",
+      "description": "Extract decision candidates from the document.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "decisions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "context": {"type": "string"},
+                "choice": {"type": "string"},
+                "source_ref": {"type": "string"},
+                "alternatives_rejected": {"type": "array", "items": {"type": "string"}},
+                "assumptions": {"type": "array", "items": {"type": "string"}},
+                "justifies": {"type": "array", "items": {"type": "string"}},
+                "confidence": {"type": "string"}
+              },
+              "required": ["context", "choice", "source_ref"],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": ["decisions"],
+        "additionalProperties": false
+      }
+    }
+  ],
+  "tool_choice": {"type": "tool", "name": "extract_decisions"}
+}

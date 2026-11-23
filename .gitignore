@@ -1,0 +1,51 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+.env.*
+!.env.example
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.hypothesis/
+.coverage
+coverage.xml
+htmlcov/
+
+# Build output
+dist/
+
+# Local / editor
+.DS_Store
+*.local
+.idea/
+.vscode/
+
+# Claude Code local settings and worktrees
+.claude/
+
+# Local ledger caches (embeddings / view)
+.reasonledger/cache/
+
+# Per-checkout watermark of the files `import` has already read
+.reasonledger/import-seen.yml
+
+# Opt-in pilot metrics. Local-only by design — committing it would publish a
+# per-developer usage record to everyone with a clone.
+.reasonledger/metrics.jsonl
+
+# Machine-specific editor MCP configs (absolute paths) - `reasonledger init` generates them
+.mcp.json
+.cursor/mcp.json
+
+# Personal scratch sheets
+*.numbers
+
+# A cloned project used to try ReasonLedger on a real codebase
+.test-ts-project/
+
+# Local-only material that must never reach a commit or the public repository.
+private/

@@ -1,0 +1,77 @@
+version: '1'
+mapped_at_commit: 3d9fd4a6fb771af84787b2792dc86c87bda6dea8
+mapped_by: reasonledger-scan
+modules:
+- id: cli
+  name: cli
+  paths:
+  - packages/cli/**
+  kind: feature
+  status: confirmed
+  confirmed_by: iharpreet
+  confirmed_at: '2026-11-11T03:52:04.739340Z'
+  evidence:
+  - workspace
+  - layout
+  confidence: high
+- id: core
+  name: core
+  paths:
+  - packages/core/**
+  kind: foundation
+  status: confirmed
+  confirmed_by: iharpreet
+  confirmed_at: '2026-11-11T03:52:00.362892Z'
+  evidence:
+  - workspace
+  - cochange
+  - layout
+  - name-hint
+  confidence: high
+- id: distribution
+  name: Distribution
+  paths: []
+  kind: feature
+  status: confirmed
+  confirmed_by: iharpreet
+  confirmed_at: '2026-11-10T18:03:34.112835Z'
+- id: mcp
+  name: mcp
+  paths:
+  - packages/mcp/**
+  kind: feature
+  status: confirmed
+  confirmed_by: iharpreet
+  confirmed_at: '2026-11-11T03:52:08.077976Z'
+  evidence:
+  - workspace
+  - layout
+  confidence: high
+- id: specs
+  name: Specs
+  paths: []
+  kind: feature
+  status: confirmed
+  confirmed_by: iharpreet
+  confirmed_at: '2026-11-10T18:41:08.530331Z'
+- id: tooling
+  name: Tooling
+  description: Files no capability owns, placed by the architecture
+  paths:
+  - .gitattributes
+  - .gitignore
+  - AGENTS.md
+  - CLAUDE.md
+  - LICENSE
+  - README.md
+  - conftest.py
+  - pyproject.toml
+  kind: bucket
+  status: proposed
+rejected: []
+labels:
+  scripts/check_dists.sh: distribution
+  scripts/corpus_report.py: core
+  scripts/record_judge_verdicts.py: core
+  scripts/release_gate.sh: distribution
+  spec/**: specs

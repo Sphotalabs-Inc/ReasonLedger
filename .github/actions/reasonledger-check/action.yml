@@ -1,0 +1,25 @@
+name: ReasonLedger Check
+description: Evaluate .reasonledger/policy.yml against a PR change context
+inputs:
+  policy-path:
+    description: Path to policy.yml
+    required: false
+    default: .reasonledger/policy.yml
+  change-path:
+    description: Path to JSON change context for the PR
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Install ReasonLedger CLI
+      shell: bash
+      run: |
+        uv sync --all-packages --dev
+    - name: Run reasonledger check
+      shell: bash
+      run: |
+        set -euo pipefail
+        uv run reasonledger check \
+          --policy "${{ inputs.policy-path }}" \
+          --change "${{ inputs.change-path }}" \
+          --json
