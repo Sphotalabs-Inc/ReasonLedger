@@ -2,6 +2,17 @@
 
 Versions move in lockstep across `reasonledger-core`, `reasonledger` and `reasonledger-mcp`.
 
+## Unreleased
+
+### Changed
+
+- Bare `reasonledger` (and `rl`) now prints a short getting-started guide and exits 0 instead of
+  an argparse "arguments are required" error. In a folder that already has `.reasonledger/` it
+  leads with `reasonledger status`; otherwise with `reasonledger init`.
+- `reasonledger --help` lists the commands in groups (everyday, review, setup, advanced).
+- A mistyped command suggests the closest real one (`reasonledger intt` -> "Did you mean `init`?")
+  and points to `reasonledger --help`. It still exits 2, and other usage errors are unchanged.
+
 ## 0.3.0a6 — pre-release
 
 First release cut from the public repository. It carries the `0.3.0a5` changes below unchanged;

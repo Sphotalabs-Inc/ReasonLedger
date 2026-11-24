@@ -5,11 +5,13 @@ from __future__ import annotations
 import argparse
 from importlib.metadata import version as package_version
 from pathlib import Path
+from typing import cast
 
 from reasonledger_cli.approve_cmd import add_approve_parser
 from reasonledger_cli.check_cmd import add_check_arguments
 from reasonledger_cli.conflict_config_cmd import add_conflict_config_parser
 from reasonledger_cli.consent_cmd import add_consent_parser
+from reasonledger_cli.first_run import HintingParser
 from reasonledger_cli.identity import BY_HELP
 from reasonledger_cli.init_cmd import add_init_parser
 from reasonledger_cli.judge_cmd import add_judge_parser
@@ -18,20 +20,36 @@ from reasonledger_cli.modules_cmd import add_modules_parser
 from reasonledger_cli.retire_cmd import add_retire_parser
 from reasonledger_cli.supersede_cmd import add_supersede_parser
 
+# A command with no group here still works and still shows in the list above.
+COMMAND_GROUPS = """\
+command groups:
+  everyday   init, ui, why, status
+  review     confirm, reject, approve, retire, supersede, dismiss
+  setup      config, consent, conflict-config
+  advanced   import, catchup, judge, map, modules, check, mcp
+
+Run `reasonledger` with no command for a short getting-started guide."""
+
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
+    parser = HintingParser(
         prog="reasonledger",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
         description=(
-            "ReasonLedger — decision memory for AI-assisted codebases. Your agents "
-            "record what was decided and why; `reasonledger why <file:line>` tells "
+            "ReasonLedger — decision memory for AI-assisted codebases. Your agents\n"
+            "record what was decided and why; `reasonledger why <file:line>` tells\n"
             "you which decision justifies a line of code."
         ),
+        epilog=COMMAND_GROUPS,
     )
     parser.add_argument(
         "--version", action="version", version=f"%(prog)s {package_version('reasonledger')}"
     )
-    sub = parser.add_subparsers(dest="command", required=True)
+    # Subparsers are built from `HintingParser` too; the helpers only need them as parsers.
+    sub = cast(
+        "argparse._SubParsersAction[argparse.ArgumentParser]",
+        parser.add_subparsers(dest="command", metavar="<command>"),
+    )
 
     add_init_parser(sub)
 
