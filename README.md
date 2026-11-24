@@ -4,6 +4,10 @@ Your AI coding agent records *why* it made each choice, you approve it once, and
 `reasonledger why <file:line>` tells you which decision justifies a line of code. The records are
 plain files in your own repository. This is an alpha (`0.3.0a6`).
 
+A short demo of the loop (init, review in the UI, why):
+
+https://github.com/user-attachments/assets/548030d1-b2ea-40ab-b61b-d131aba451e5
+
 ```bash
 cd /path/to/your-app
 uvx reasonledger init                         # .reasonledger/, the MCP config and the agent rule
