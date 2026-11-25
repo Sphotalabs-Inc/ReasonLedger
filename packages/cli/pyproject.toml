@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "reasonledger"
-version = "0.3.0a8"
+version = "0.3.0a9"
 description = "Never lose the why behind AI-written code — decision capture, review, and policy checks"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -23,13 +23,13 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = [
-    "reasonledger-core==0.3.0a8",
-    "reasonledger-mcp==0.3.0a8",
+    "reasonledger-core==0.3.0a9",
+    "reasonledger-mcp==0.3.0a9",
 ]
 
 [project.optional-dependencies]
 embeddings = [
-    "reasonledger-core[embeddings]==0.3.0a8",
+    "reasonledger-core[embeddings]==0.3.0a9",
 ]
 
 [project.urls]

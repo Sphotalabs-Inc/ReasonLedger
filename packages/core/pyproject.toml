@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "reasonledger-core"
-version = "0.3.0a8"
+version = "0.3.0a9"
 description = "Framework-free domain logic for ReasonLedger"
 readme = "README.md"
 requires-python = ">=3.12"

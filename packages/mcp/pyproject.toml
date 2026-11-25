@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "reasonledger-mcp"
-version = "0.3.0a8"
+version = "0.3.0a9"
 description = "ReasonLedger MCP server — vendor-neutral decision capture"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -22,7 +22,7 @@ classifiers = [
 ]
 dependencies = [
     "mcp>=1.27,<2",
-    "reasonledger-core==0.3.0a8",
+    "reasonledger-core==0.3.0a9",
     # mcp needs pyjwt[crypto]; cryptography 49+ ships no Intel macOS wheel, so an install there
     # builds it from source and fails without Rust 1.83+. 48.x still has the wheel.
     "cryptography<49; sys_platform == 'darwin' and platform_machine == 'x86_64'",

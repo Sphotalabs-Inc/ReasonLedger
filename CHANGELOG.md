@@ -2,6 +2,23 @@
 
 Versions move in lockstep across `reasonledger-core`, `reasonledger` and `reasonledger-mcp`.
 
+## 0.3.0a9 — pre-release
+
+### Fixed
+
+- Installing on an Intel Mac no longer needs a Rust compiler. `mcp` pulls in `cryptography`, whose
+  releases from 49 on ship no Intel macOS wheel, so pip and uv built it from source and failed
+  without Rust 1.83 or newer. `reasonledger-mcp` now keeps Intel Macs on `cryptography<49`, which
+  has the wheel; every other platform is unchanged.
+- The hint shown when the local embedder is missing names this release
+  (`pip install 'reasonledger[embeddings]==0.3.0a9'`). Without a version, pip skips pre-releases
+  and found nothing to install.
+
+### Added
+
+- A "Help test the alpha" section in the README, and bug-report and feedback forms for GitHub
+  issues that ask for the version, OS, install method and coding agent.
+
 ## 0.3.0a8 — pre-release
 
 ### Fixed

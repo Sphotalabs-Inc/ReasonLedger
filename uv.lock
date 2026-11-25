@@ -1375,7 +1375,7 @@ wheels = [
 
 [[package]]
 name = "reasonledger"
-version = "0.3.0a8"
+version = "0.3.0a9"
 source = { editable = "packages/cli" }
 dependencies = [
     { name = "reasonledger-core" },
@@ -1397,7 +1397,7 @@ provides-extras = ["embeddings"]
 
 [[package]]
 name = "reasonledger-core"
-version = "0.3.0a8"
+version = "0.3.0a9"
 source = { editable = "packages/core" }
 dependencies = [
     { name = "numpy" },
@@ -1431,7 +1431,7 @@ provides-extras = ["embeddings", "dev"]
 
 [[package]]
 name = "reasonledger-mcp"
-version = "0.3.0a8"
+version = "0.3.0a9"
 source = { editable = "packages/mcp" }
 dependencies = [
     { name = "cryptography", version = "48.0.1", source = { registry = "https://pypi.org/simple" }, marker = "platform_machine == 'x86_64' and sys_platform == 'darwin'" },
@@ -1448,7 +1448,7 @@ requires-dist = [
 
 [[package]]
 name = "reasonledger-workspace"
-version = "0.3.0a8"
+version = "0.3.0a9"
 source = { virtual = "." }
 
 [package.dev-dependencies]

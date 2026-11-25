@@ -3,7 +3,7 @@
 **Audience:** anyone installing ReasonLedger for the first time.
 **Companion:** [`product-guide.md`](product-guide.md) (day-to-day use) · [`integration.md`](integration.md) (wiring it into an app repo).
 
-`0.3.0a8` is an alpha. The `uvx` / `uv tool install` lines fetch it from PyPI; every other command on this page was run against a clean clone before it was written down.
+`0.3.0a9` is an alpha. The `uvx` / `uv tool install` lines fetch it from PyPI; every other command on this page was run against a clean clone before it was written down.
 
 ---
 
@@ -68,7 +68,7 @@ uv tool update-shell     # only if uv warns the tool directory is not on your PA
 reasonledger --version
 ```
 
-While the only published versions are pre-releases (`0.3.0a8`), `uvx` and `uv tool install` pick them up without a flag; if yours does not, add `--prerelease allow`. ReasonLedger runs on macOS, Linux and Windows.
+While the only published versions are pre-releases (`0.3.0a9`), `uvx` and `uv tool install` pick them up without a flag; if yours does not, add `--prerelease allow`. ReasonLedger runs on macOS, Linux and Windows.
 
 ## Contributors: install from a checkout
 
