@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "reasonledger"
-version = "0.3.0a6"
+version = "0.3.0a7"
 description = "Never lose the why behind AI-written code — decision capture, review, and policy checks"
 readme = "README.md"
 requires-python = ">=3.12"

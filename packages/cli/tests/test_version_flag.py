@@ -24,5 +24,5 @@ def test_version_flag_matches_metadata(capsys: pytest.CaptureFixture[str]) -> No
 @pytest.mark.phase_3
 def test_workspace_packages_share_one_version() -> None:
     assert {version(n) for n in ("reasonledger", "reasonledger-core", "reasonledger-mcp")} == {
-        "0.3.0a6"
+        "0.3.0a7"
     }

@@ -17,7 +17,7 @@ import yaml
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = REPO_ROOT / "scripts" / "check_release_tag.py"
 WORKFLOW = REPO_ROOT / ".github" / "workflows" / "release.yml"
-VERSION = "0.3.0a6"
+VERSION = "0.3.0a7"
 LOCKSTEP = {"reasonledger-core": VERSION, "reasonledger": VERSION, "reasonledger-mcp": VERSION}
 
 
@@ -41,9 +41,9 @@ def test_a_tag_naming_the_shared_version_passes() -> None:
 @pytest.mark.phase_3
 def test_a_tag_for_another_version_is_refused_and_names_both() -> None:
     with pytest.raises(tag_check.TagError) as refused:
-        tag_check.check_tag("v0.3.0a7", LOCKSTEP)
+        tag_check.check_tag("v0.3.0a8", LOCKSTEP)
     message = str(refused.value)
-    assert "0.3.0a7" in message
+    assert "0.3.0a8" in message
     assert VERSION in message
 
 
