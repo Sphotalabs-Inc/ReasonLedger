@@ -15,6 +15,7 @@ import importlib.util
 import math
 import re
 from functools import lru_cache
+from importlib.metadata import version as package_version
 from typing import Protocol, runtime_checkable
 
 from reasonledger_core.links import INSTALL_DOCS_URL
@@ -29,8 +30,10 @@ from reasonledger_core.reasoning.config import (
 from reasonledger_core.settings import Settings
 
 _TOKEN_RE = re.compile(r"[a-z0-9]+")
+# Pinned to this release: pip skips pre-releases unless named, and --pre would also admit
+# pre-releases of every dependency once a stable reasonledger exists.
 LOCAL_EMBEDDER_INSTALL_HINT = (
-    "pip install 'reasonledger[embeddings]' "
+    f"pip install 'reasonledger[embeddings]=={package_version('reasonledger-core')}' "
     "(in a ReasonLedger checkout: uv sync --all-packages --extra embeddings; "
     f"for a `uv tool` install see {INSTALL_DOCS_URL})"
 )

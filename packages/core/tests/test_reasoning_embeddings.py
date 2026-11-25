@@ -6,6 +6,7 @@ import json
 import sys
 import types
 from collections.abc import Iterator
+from importlib.metadata import version
 from pathlib import Path
 from unittest.mock import patch
 
@@ -15,6 +16,7 @@ from pydantic import ValidationError
 from reasonledger_core.reasoning.cache import CACHE_DIR, CachingEmbedder
 from reasonledger_core.reasoning.config import EMBEDDING_DIM, EMBEDDING_PROVIDER_DETERMINISTIC
 from reasonledger_core.reasoning.embeddings import (
+    LOCAL_EMBEDDER_INSTALL_HINT,
     DeterministicEmbedder,
     Embedder,
     LocalEmbedder,
@@ -155,3 +157,10 @@ def test_local_embedder_returns_plain_floats_the_disk_cache_can_store(tmp_path: 
     assert all(type(component) is float for component in embedder.embed("anything"))
     CachingEmbedder(embedder, root=tmp_path).embed("anything")
     assert len(list((tmp_path / CACHE_DIR).glob("*.json"))) == 1
+
+
+@pytest.mark.phase_4
+def test_install_hint_names_this_release_so_pip_finds_a_pre_release() -> None:
+    """A bare `pip install 'reasonledger[embeddings]'` skips pre-releases and finds nothing."""
+    pinned = f"pip install 'reasonledger[embeddings]=={version('reasonledger-core')}'"
+    assert LOCAL_EMBEDDER_INSTALL_HINT.startswith(pinned)
