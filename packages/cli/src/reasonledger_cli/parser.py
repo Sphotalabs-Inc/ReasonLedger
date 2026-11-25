@@ -37,8 +37,8 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         description=(
             "ReasonLedger — decision memory for AI-assisted codebases. Your agents\n"
-            "record what was decided and why; `reasonledger why <file:line>` tells\n"
-            "you which decision justifies a line of code."
+            "record what was decided and why; `reasonledger why` tells you which\n"
+            "decision justifies a line, function, or file."
         ),
         epilog=COMMAND_GROUPS,
     )
@@ -57,7 +57,9 @@ def build_parser() -> argparse.ArgumentParser:
     add_check_arguments(check)
 
     why = sub.add_parser("why", help="Show the decision(s) that justify a code locus")
-    why.add_argument("target", help="Code locus as path or path:line, e.g. payments/retry.py:55")
+    why.add_argument(
+        "target", help="A file, a line or a function: path, path:line or path::function"
+    )
     why.add_argument(
         "--root",
         type=Path,

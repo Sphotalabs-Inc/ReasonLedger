@@ -6,6 +6,11 @@ Versions move in lockstep across `reasonledger-core`, `reasonledger` and `reason
 
 ### Changed
 
+- `why` is now described everywhere as answering for "a line, function, or file", which is what it
+  accepts (`why <file>`, `why <file>:<line>`, `why <file>::<function>`): the CLI help, the bare
+  command's welcome, the README and the docs. The README and user manual show all three forms.
+- The PyPI READMEs carry CI and PyPI badges, a "Watch the demo" poster linking to the demo video, and
+  absolute links only.
 - Bare `reasonledger` (and `rl`) now prints a short getting-started guide and exits 0 instead of
   an argparse "arguments are required" error. In a folder that already has `.reasonledger/` it
   leads with `reasonledger status`; otherwise with `reasonledger init`.

@@ -1,5 +1,7 @@
 # reasonledger-mcp
 
+[![CI](https://github.com/Sphotalabs-Inc/ReasonLedger/actions/workflows/ci.yml/badge.svg)](https://github.com/Sphotalabs-Inc/ReasonLedger/actions/workflows/ci.yml) [![PyPI](https://img.shields.io/pypi/v/reasonledger-mcp?include_prereleases&label=PyPI)](https://pypi.org/project/reasonledger-mcp/)
+
 The [Model Context Protocol](https://modelcontextprotocol.io) server for
 [ReasonLedger](https://github.com/Sphotalabs-Inc/ReasonLedger). It lets a coding agent record
 the decision it just made — and recall the decisions already made — without leaving the

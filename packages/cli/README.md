@@ -1,14 +1,22 @@
 # reasonledger
 
+[![CI](https://github.com/Sphotalabs-Inc/ReasonLedger/actions/workflows/ci.yml/badge.svg)](https://github.com/Sphotalabs-Inc/ReasonLedger/actions/workflows/ci.yml) [![PyPI](https://img.shields.io/pypi/v/reasonledger?include_prereleases&label=PyPI)](https://pypi.org/project/reasonledger/)
+
 **Never lose the *why* behind AI-written code.** `reasonledger` is the command-line
 surface of [ReasonLedger](https://github.com/Sphotalabs-Inc/ReasonLedger): it captures the
 decisions behind your codebase as reviewable records, tells you which decision justifies
-a given line, and checks changes against a policy in CI.
+a line, function, or file, and checks changes against a policy in CI.
 
 Everything it manages lives in a `.reasonledger/` directory inside your own repo. There
 is no database, no daemon, no account, and nothing runs in the background.
 
 > **Alpha (`0.3.0a6`).** Expect rough edges.
+
+## Watch the demo
+
+[![Watch the ReasonLedger demo: init, review in the UI, why](https://raw.githubusercontent.com/Sphotalabs-Inc/ReasonLedger/main/docs/media/demo-poster.png)](https://github.com/user-attachments/assets/548030d1-b2ea-40ab-b61b-d131aba451e5)
+
+[Watch the demo](https://github.com/user-attachments/assets/548030d1-b2ea-40ab-b61b-d131aba451e5) (init, review in the UI, why).
 
 ## The loop
 
@@ -17,6 +25,14 @@ cd /path/to/your-app
 uvx reasonledger init                      # .reasonledger/, the MCP config and the agent rule
 uvx reasonledger ui                        # approve what your agent recorded, on 127.0.0.1
 uvx reasonledger why payments/retry.py:55  # which decision justifies this line?
+```
+
+`why` works on a file, a line, or a function:
+
+```bash
+uvx reasonledger why payments/retry.py             # the whole file
+uvx reasonledger why payments/retry.py:55          # one line
+uvx reasonledger why payments/retry.py::with_retry # one function
 ```
 
 `init` writes the MCP config and the agent rule for Claude Code, Cursor and VS Code. Your agent
@@ -29,7 +45,7 @@ reasonledger --version
 ```
 
 To work on ReasonLedger itself, use a checkout of the
-[monorepo](https://github.com/Sphotalabs-Inc/ReasonLedger) (see its `docs/install.md`).
+[monorepo](https://github.com/Sphotalabs-Inc/ReasonLedger) (see its [`docs/install.md`](https://github.com/Sphotalabs-Inc/ReasonLedger/blob/main/docs/install.md)).
 
 ## Backfill from the docs you already have
 

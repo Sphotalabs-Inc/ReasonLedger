@@ -17,12 +17,12 @@ _BAD_COMMAND = re.compile(r"^argument <command>: invalid choice: '(?P<typed>[^']
 
 _TAGLINE = (
     "ReasonLedger: your AI coding agent records why it made each choice; you approve it;\n"
-    "`why` shows which decision justifies a line of code."
+    "`why` shows which decision justifies a line, function, or file."
 )
 _STATUS = "reasonledger status           # what is waiting for review, what is in force"
 _INIT = "reasonledger init             # set up .reasonledger/, the MCP config, the agent rule"
 _UI = "reasonledger ui               # approve what your agent recorded, on 127.0.0.1"
-_WHY = "reasonledger why <file:line>  # which decision justifies this line?"
+_WHY = "reasonledger why <file:line>  # which decision justifies this line (or ::function)?"
 _FOOTER = "`reasonledger --help` lists every command; docs/install.md covers setup."
 
 

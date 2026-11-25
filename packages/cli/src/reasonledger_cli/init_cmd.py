@@ -62,7 +62,10 @@ rules:
 EMBEDDINGS_LABEL = "Optional real embeddings for related decisions:"
 EMBEDDINGS_TOOL_COMMAND = 'uv tool install --force "reasonledger[embeddings]"'
 EMBEDDINGS_DOCS_POINTER = "see docs/install.md"
-HEADLINE = "Decision memory for AI-assisted codebases — never lose the why behind a line of code."
+HEADLINE = (
+    "Decision memory for AI-assisted codebases — "
+    "never lose the why behind a line, function, or file."
+)
 
 
 @dataclass(frozen=True)

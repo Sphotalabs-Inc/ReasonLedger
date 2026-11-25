@@ -151,7 +151,7 @@ A decision can name a condition it depends on — `queue_depth < 100`. When you 
 | `reasonledger reject <id>` | Drop a proposal |
 | `reasonledger dismiss <a> <b> --reason "..."` | Mark a conflict hint as wrong (committed, team-shared) |
 | `reasonledger conflict-config [--show]` | Tune the conflict-detection gate/embedder for this repo |
-| `reasonledger why <path[:line]>` | Which decision(s) justify this code, even after the code moved (labelled *moved* or *lost*) |
+| `reasonledger why <path[:line\|::function]>` | Which decision(s) justify this code, even after the code moved (labelled *moved* or *lost*) |
 | `reasonledger approve <id>` / `retire <id> --reason ...` | A person's verdict, or taking a decision out of force; recorded under your git `user.name` |
 | `reasonledger check` | Evaluate policy against a change (CI) |
 

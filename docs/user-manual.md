@@ -1,8 +1,8 @@
 # ReasonLedger — User Manual
 
-**Never lose the why behind a line of AI-written code.** Your coding agent records each real
+**Never lose the why behind a line, function, or file of AI-written code.** Your coding agent records each real
 design choice as a small markdown file in your repo. You review it. Months later you point at
-a line and ask why it is there.
+a line, a function or a file and ask why it is there.
 
 This manual gets you from nothing to a working loop in about ten minutes. Deeper references:
 [`install.md`](install.md) · [`product-guide.md`](product-guide.md) ·
@@ -17,7 +17,8 @@ This manual gets you from nothing to a working loop in about ten minutes. Deeper
 - **Keeps them in git.** One markdown file per decision in `.reasonledger/decisions/`. No
   database, no server, no account. `cat` and `git log` work.
 - **Waits for you.** A decision an agent records is `pending` until a person approves it.
-- **Answers "why".** `reasonledger why path/to/file.py:42` returns the decision behind that line.
+- **Answers "why".** `reasonledger why path/to/file.py:42` returns the decision behind that line, and `why` also
+  takes a function (`file.py::name`) or a whole file.
 - **Flags contradictions.** Two decisions that answer the same question differently can be
   surfaced as a conflict (optional, §5.2).
 
@@ -167,8 +168,12 @@ the waiting list.
 
 ### 4.4 Ask why
 
+`why` works on a file, a line, or a function:
+
 ```bash
-reasonledger why src/payments/retry.ts:4
+reasonledger why src/payments/retry.ts             # the whole file
+reasonledger why src/payments/retry.ts:4           # one line
+reasonledger why src/payments/retry.ts::withRetry  # one function
 ```
 
 ```text
@@ -323,7 +328,7 @@ the agent sees only what it can already see in your repo.
 | `reasonledger approve <id>` | Give a pending decision a verdict, as your git identity |
 | `reasonledger retire <id> --reason <why>` | Take a decision that no longer applies out of force |
 | `reasonledger supersede <id> --successor <id> --reason <why>` | Settle two decisions that clash: the first is kept as history and points at the one that stands |
-| `reasonledger why <path[:line]>` | Which decision explains this code |
+| `reasonledger why <path[:line\|::function]>` | Which decision explains this line, function, or file |
 | `reasonledger import` / `catchup` | Propose decisions from docs and commits |
 | `reasonledger confirm` / `reject` | Accept or drop a proposal |
 | `reasonledger judge` / `dismiss` | Judge related pairs; mark a false alarm |
@@ -343,7 +348,7 @@ The most useful test is on your own repo, during real work:
 
 1. Do §2 and §3, then work with your agent for a session or two.
 2. Review what it recorded (§4.2).
-3. A few days later, run `why` on a line the agent wrote.
+3. A few days later, run `why` on a line, function or file the agent wrote.
 
 What the author most wants to know:
 

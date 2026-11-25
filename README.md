@@ -1,7 +1,9 @@
 # ReasonLedger
 
+[![CI](https://github.com/Sphotalabs-Inc/ReasonLedger/actions/workflows/ci.yml/badge.svg)](https://github.com/Sphotalabs-Inc/ReasonLedger/actions/workflows/ci.yml) [![PyPI](https://img.shields.io/pypi/v/reasonledger?include_prereleases&label=PyPI)](https://pypi.org/project/reasonledger/)
+
 Your AI coding agent records *why* it made each choice, you approve it once, and
-`reasonledger why <file:line>` tells you which decision justifies a line of code. The records are
+`reasonledger why` tells you which decision justifies a line, function, or file. The records are
 plain files in your own repository. This is an alpha (`0.3.0a6`).
 
 A short demo of the loop (init, review in the UI, why):
@@ -13,6 +15,14 @@ cd /path/to/your-app
 uvx reasonledger init                         # .reasonledger/, the MCP config and the agent rule
 uvx reasonledger ui                           # approve what your agent recorded, on 127.0.0.1
 uvx reasonledger why src/jobs/queue.py:55     # which decision justifies this line?
+```
+
+`why` takes a file, a line, or a function:
+
+```bash
+uvx reasonledger why src/jobs/queue.py            # the whole file
+uvx reasonledger why src/jobs/queue.py:55         # one line
+uvx reasonledger why src/jobs/queue.py::enqueue   # one function
 ```
 
 A decision is one Markdown file in `.reasonledger/decisions/` (an excerpt of a real one from this
@@ -82,8 +92,8 @@ Nothing runs in the background unless you start it. No daemon, no telemetry.
 ## Status
 
 Early, and local-first. The core loop works end to end: your coding agent records decisions over
-MCP, you review and approve them in `reasonledger ui`, and `reasonledger why <file:line>` tells you
-which decision justifies a line of code. Also built:
+MCP, you review and approve them in `reasonledger ui`, and `reasonledger why` tells you which
+decision justifies a line, function, or file. Also built:
 
 - conflict detection between related decisions, judged by your own coding agent over MCP or by a
   model you configure;
@@ -110,7 +120,7 @@ python3 -m uv run pytest -m "phase_1 or phase_2 or phase_3 or phase_4 or phase_5
 # MCP server (stdio) — query_decisions supports semantic=true for pre-decision recall
 uv run reasonledger mcp --repo-root .
 
-# Reasoning-blame: which decision(s) justify a line of code
+# Reasoning-blame: which decision(s) justify a line, function, or file
 uv run reasonledger why packages/core/src/reasonledger_core/decisions/service.py:40
 
 # What changed since the last sync? (--dry-run costs nothing and needs no model)
