@@ -69,6 +69,54 @@ def test_the_real_packages_declare_one_version_between_them() -> None:
 
 
 @pytest.mark.phase_3
+def test_exact_sibling_pins_pass() -> None:
+    pins = [
+        tag_check.SiblingPin("reasonledger", "reasonledger-core", f"=={VERSION}"),
+        tag_check.SiblingPin("reasonledger-mcp", "reasonledger-core", f"=={VERSION}"),
+    ]
+    tag_check.check_pins(VERSION, pins)
+
+
+@pytest.mark.phase_3
+@pytest.mark.parametrize("spec", [">=0.3.0a1,<0.4.0", "==0.3.0a6", ""])
+def test_a_sibling_pin_that_is_not_exactly_the_version_is_refused(spec: str) -> None:
+    pin = tag_check.SiblingPin("reasonledger", "reasonledger-mcp", spec)
+    with pytest.raises(tag_check.TagError, match="reasonledger needs reasonledger-mcp"):
+        tag_check.check_pins(VERSION, [pin])
+
+
+@pytest.mark.phase_3
+def test_sibling_pins_read_extras_and_ignore_outside_dependencies(tmp_path: Path) -> None:
+    for directory, body in {
+        "core": 'name = "reasonledger-core"\ndependencies = ["numpy>=2"]\n',
+        "cli": (
+            'name = "reasonledger"\ndependencies = ["reasonledger-core==1"]\n'
+            '[project.optional-dependencies]\nembeddings = ["reasonledger-core[embeddings] >=1"]\n'
+        ),
+        "mcp": 'name = "reasonledger-mcp"\ndependencies = ["mcp>=1.27,<2"]\n',
+    }.items():
+        pyproject = tmp_path / "packages" / directory / "pyproject.toml"
+        pyproject.parent.mkdir(parents=True)
+        pyproject.write_text(f'[project]\nversion = "1"\n{body}', encoding="utf-8")
+    assert tag_check.sibling_pins(tmp_path) == [
+        ("reasonledger", "reasonledger-core", "==1"),
+        ("reasonledger", "reasonledger-core", ">=1"),
+    ]
+
+
+@pytest.mark.phase_3
+def test_the_real_packages_pin_each_other_to_their_version() -> None:
+    (declared,) = set(tag_check.package_versions().values())
+    pins = tag_check.sibling_pins()
+    assert {(pin.owner, pin.name) for pin in pins} == {
+        ("reasonledger", "reasonledger-core"),
+        ("reasonledger", "reasonledger-mcp"),
+        ("reasonledger-mcp", "reasonledger-core"),
+    }
+    tag_check.check_pins(declared, pins)
+
+
+@pytest.mark.phase_3
 def test_main_exits_nonzero_for_a_tag_that_disagrees(capsys: pytest.CaptureFixture[str]) -> None:
     assert tag_check.main(["v999.0.0"]) == 1
     assert "FAILED" in capsys.readouterr().err

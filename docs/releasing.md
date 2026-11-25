@@ -18,7 +18,7 @@ Three packages, versioned in lockstep, all at `0.3.0a7`:
 | `reasonledger` | `packages/cli` | `reasonledger-core>=0.3.0a1,<0.4.0`, `reasonledger-mcp>=0.3.0a1,<0.4.0` |
 | `reasonledger-mcp` | `packages/mcp` | `reasonledger-core>=0.3.0a1,<0.4.0` |
 
-**Publish in this order: `reasonledger-core`, then `reasonledger-mcp`, then `reasonledger`.** Each declares a version range against the ones before it, and an index cannot resolve a range until its target is there. If `reasonledger` lands before `reasonledger-mcp`, it is uninstallable until the MCP server arrives (or, on a later release, it quietly resolves an older MCP server).
+**Publish in this order: `reasonledger-core`, then `reasonledger-mcp`, then `reasonledger`.** Each pins the ones before it to the same version, and an index cannot resolve a pin until its target is there. If `reasonledger` lands before `reasonledger-mcp`, it is uninstallable until the MCP server arrives.
 
 ## Before you publish
 
@@ -106,4 +106,4 @@ Copy into the release PR. Nothing below has been done yet.
 - Conventional Commits drive the change log; the three `pyproject.toml` versions move together.
 - The release workflow runs `scripts/check_release_tag.py` on a tag push and stops unless the tag is exactly `v` plus the version all three packages declare. The upload takes its number from `pyproject.toml`, not from the tag, so this is what stops `v0.3.0a7` publishing `0.3.0a5`. It then stops unless the tagged commit is already on `main`. A TestPyPI rehearsal has no tag and skips both checks, and can only reach TestPyPI.
 - The workflow's actions are pinned to commits (the comment beside each names the tag), and the three `pyproject.toml` files require `hatchling>=1.27,<2`. 1.27 is the first release whose wheels carry `License-Expression` and the `LICENSE` and `NOTICE` files (1.26.2 builds without error but its wheels carry neither, which `check_dists.sh` would catch). Bump a SHA and its comment together.
-- The cross-package range is `>=X.Y.0,<X.(Y+1).0` — bumping core's minor requires bumping the range in `packages/cli` and `packages/mcp`. `test_dist_packaging.py` pins the exact string, so it fails if you bump one and forget the others.
+- The packages pin each other exactly (`reasonledger-core==X`, including the `[embeddings]` extra), so every version bump also bumps those pins in `packages/cli` and `packages/mcp`. A range would let `pip install -U reasonledger` keep an older core or MCP server beside the new CLI, a pairing no release was tested as. `check_release_tag.py` refuses a tag while any sibling pin differs from it, and `test_check_release_tag.py` and `test_dist_packaging.py` fail on the tree before that.

@@ -23,13 +23,13 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = [
-    "reasonledger-core>=0.3.0a1,<0.4.0",
-    "reasonledger-mcp>=0.3.0a1,<0.4.0",
+    "reasonledger-core==0.3.0a7",
+    "reasonledger-mcp==0.3.0a7",
 ]
 
 [project.optional-dependencies]
 embeddings = [
-    "reasonledger-core[embeddings]>=0.3.0a1,<0.4.0",
+    "reasonledger-core[embeddings]==0.3.0a7",
 ]
 
 [project.urls]

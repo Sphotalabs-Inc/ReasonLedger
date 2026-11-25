@@ -7,32 +7,85 @@ never be reused.
 
     python scripts/check_release_tag.py v0.3.0a7
 
-The three packages move in lockstep, so all three must carry the tag's version.
+The three packages move in lockstep, so all three must carry the tag's version and require each
+other at exactly that version.
 """
 
 from __future__ import annotations
 
 import argparse
+import itertools
+import re
 import sys
 import tomllib
-from collections.abc import Mapping
+from collections.abc import Iterable, Mapping
 from pathlib import Path
+from typing import Any, NamedTuple
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 PACKAGE_DIRS = ("core", "cli", "mcp")
 TAG_PREFIX = "v"
+# A PEP 508 requirement up to its marker: name, optional extras, then the version specifier.
+REQUIREMENT = re.compile(r"^(?P<name>[A-Za-z0-9._-]+)\s*(?:\[[^\]]*\])?\s*(?P<spec>[^;]*)")
 
 
 class TagError(Exception):
     """The tag cannot be released from this tree; the message is what the job log shows."""
 
 
+class SiblingPin(NamedTuple):
+    """One package's requirement on another package of this release."""
+
+    owner: str
+    name: str
+    spec: str
+
+
+def _projects(root: Path) -> list[dict[str, Any]]:
+    return [
+        tomllib.loads((root / "packages" / d / "pyproject.toml").read_text(encoding="utf-8"))[
+            "project"
+        ]
+        for d in PACKAGE_DIRS
+    ]
+
+
+def sibling_pins(root: Path = REPO_ROOT) -> list[SiblingPin]:
+    """Every requirement, extras included, that one package declares on another of the three."""
+    projects = _projects(root)
+    names = {str(project["name"]) for project in projects}
+    pins: list[SiblingPin] = []
+    for project in projects:
+        groups: Iterable[list[str]] = [
+            project.get("dependencies", []),
+            *project.get("optional-dependencies", {}).values(),
+        ]
+        for requirement in itertools.chain.from_iterable(groups):
+            match = REQUIREMENT.match(requirement)
+            if match and match["name"] in names:
+                pins.append(SiblingPin(str(project["name"]), match["name"], match["spec"].strip()))
+    return pins
+
+
+def check_pins(version: str, pins: Iterable[SiblingPin]) -> None:
+    """Raise TagError unless every sibling requirement is exactly ``==version``.
+
+    A range lets `pip install -U reasonledger` keep an older core or MCP release beside the new
+    CLI, a pairing no release was tested as.
+    """
+    wanted = f"=={version}"
+    loose = [f"{pin.owner} needs {pin.name}{pin.spec}" for pin in pins if pin.spec != wanted]
+    if loose:
+        raise TagError(
+            f"the packages must pin each other to {wanted}, but {'; '.join(loose)}. "
+            "Set every sibling requirement in pyproject.toml to the release version."
+        )
+
+
 def package_versions(root: Path = REPO_ROOT) -> dict[str, str]:
     """Each package's name mapped to the version its pyproject.toml declares."""
     versions: dict[str, str] = {}
-    for directory in PACKAGE_DIRS:
-        pyproject = root / "packages" / directory / "pyproject.toml"
-        project = tomllib.loads(pyproject.read_text(encoding="utf-8"))["project"]
+    for project in _projects(root):
         versions[str(project["name"])] = str(project["version"])
     return versions
 
@@ -57,10 +110,11 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     try:
         check_tag(args.tag, package_versions())
+        check_pins(args.tag.removeprefix(TAG_PREFIX), sibling_pins())
     except TagError as exc:
         print(f"FAILED: {exc}", file=sys.stderr)
         return 1
-    print(f"tag {args.tag} matches every package version", flush=True)
+    print(f"tag {args.tag} matches every package version and sibling pin", flush=True)
     return 0
 
 

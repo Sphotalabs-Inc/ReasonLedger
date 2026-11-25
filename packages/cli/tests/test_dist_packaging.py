@@ -20,8 +20,8 @@ CLI_PYPROJECT = REPO_ROOT / "packages" / "cli" / "pyproject.toml"
 
 DIST_NAME = "reasonledger"
 PACKAGES = ("reasonledger-core", "reasonledger", "reasonledger-mcp")
-CORE_REQUIREMENT = "reasonledger-core>=0.3.0a1,<0.4.0"
-MCP_REQUIREMENT = "reasonledger-mcp>=0.3.0a1,<0.4.0"
+CORE_DIST = "reasonledger-core"
+MCP_DIST = "reasonledger-mcp"
 EXPECTED_ASSETS = {
     "agent_card.js",
     "api.js",
@@ -119,8 +119,13 @@ def test_cli_dist_is_named_reasonledger() -> None:
 
 @pytest.mark.phase_3
 def test_cli_declares_publishable_core_and_mcp_dependencies() -> None:
-    """A bare `reasonledger-core` is unresolvable from an index — it needs a range."""
-    assert _cli_metadata()["dependencies"] == [CORE_REQUIREMENT, MCP_REQUIREMENT]
+    """A bare `reasonledger-core` is unresolvable from an index, and a range lets an upgrade of
+    the CLI keep an older core or MCP release: each sibling is pinned to this release."""
+    version = _cli_metadata()["version"]
+    assert _cli_metadata()["dependencies"] == [
+        f"{CORE_DIST}=={version}",
+        f"{MCP_DIST}=={version}",
+    ]
 
 
 @pytest.mark.phase_3
