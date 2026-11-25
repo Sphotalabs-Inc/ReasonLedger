@@ -8,6 +8,7 @@ from pathlib import Path
 
 from reasonledger_core.decisions.format import DECISIONS_DIR
 from reasonledger_core.importer.scan import commit_sources, count_scannable_docs
+from reasonledger_core.links import INSTALL_DOCS_URL
 from reasonledger_core.reasoning.conflict_config import (
     CONFLICT_CONFIG_PATH,
     ConflictConfig,
@@ -61,7 +62,7 @@ rules:
 # Leads with developer value (S29): what the tool does for the person running `init`.
 EMBEDDINGS_LABEL = "Optional real embeddings for related decisions:"
 EMBEDDINGS_TOOL_COMMAND = 'uv tool install --force "reasonledger[embeddings]"'
-EMBEDDINGS_DOCS_POINTER = "see docs/install.md"
+EMBEDDINGS_DOCS_POINTER = f"see {INSTALL_DOCS_URL}"
 HEADLINE = (
     "Decision memory for AI-assisted codebases — "
     "never lose the why behind a line, function, or file."

@@ -9,6 +9,8 @@ import sys
 from pathlib import Path
 from typing import NoReturn
 
+from reasonledger_core.links import INSTALL_DOCS_URL
+
 LEDGER_DIR = ".reasonledger"
 PROG = "reasonledger"
 EXIT_USAGE = 2
@@ -23,7 +25,7 @@ _STATUS = "reasonledger status           # what is waiting for review, what is i
 _INIT = "reasonledger init             # set up .reasonledger/, the MCP config, the agent rule"
 _UI = "reasonledger ui               # approve what your agent recorded, on 127.0.0.1"
 _WHY = "reasonledger why <file:line>  # which decision justifies this line (or ::function)?"
-_FOOTER = "`reasonledger --help` lists every command; docs/install.md covers setup."
+_FOOTER = f"`reasonledger --help` lists every command; setup: {INSTALL_DOCS_URL}"
 
 
 def welcome_text(root: Path) -> str:

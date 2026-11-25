@@ -17,6 +17,7 @@ import re
 from functools import lru_cache
 from typing import Protocol, runtime_checkable
 
+from reasonledger_core.links import INSTALL_DOCS_URL
 from reasonledger_core.models.decision import DecisionRecord
 from reasonledger_core.reasoning.config import (
     DETERMINISTIC_MODEL_ID,
@@ -31,7 +32,7 @@ _TOKEN_RE = re.compile(r"[a-z0-9]+")
 LOCAL_EMBEDDER_INSTALL_HINT = (
     "pip install 'reasonledger[embeddings]' "
     "(in a ReasonLedger checkout: uv sync --all-packages --extra embeddings; "
-    "for a `uv tool` install see docs/install.md)"
+    f"for a `uv tool` install see {INSTALL_DOCS_URL})"
 )
 
 

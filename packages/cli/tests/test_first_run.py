@@ -9,6 +9,7 @@ import pytest
 from reasonledger_cli.first_run import LEDGER_DIR
 from reasonledger_cli.main import main
 from reasonledger_cli.parser import COMMAND_GROUPS, build_parser
+from reasonledger_core.links import INSTALL_DOCS_URL
 
 
 def _lines(text: str) -> list[str]:
@@ -28,7 +29,7 @@ def test_bare_command_prints_the_first_run_loop_with_init_first(
     assert len(out) <= 15
     steps = [line.split()[1] for line in out if line.startswith("  reasonledger ")]
     assert steps == ["init", "ui", "why"]
-    assert any("--help" in line and "docs/install.md" in line for line in out)
+    assert any("--help" in line and INSTALL_DOCS_URL in line for line in out)
 
 
 @pytest.mark.phase_3
