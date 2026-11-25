@@ -2,10 +2,14 @@
 
 Versions move in lockstep across `reasonledger-core`, `reasonledger` and `reasonledger-mcp`.
 
-## Unreleased
+## 0.3.0a7 — pre-release
 
 ### Changed
 
+- The GitHub Actions workflows run on the Node 24 releases of `actions/checkout`,
+  `astral-sh/setup-uv`, `actions/upload-artifact` and `actions/download-artifact`, each pinned by
+  commit SHA, and Dependabot keeps those pins current weekly. This clears the Node.js 20
+  deprecation warning in CI and Release.
 - `why` is now described everywhere as answering for "a line, function, or file", which is what it
   accepts (`why <file>`, `why <file>:<line>`, `why <file>::<function>`): the CLI help, the bare
   command's welcome, the README and the docs. The README and user manual show all three forms.

@@ -4,7 +4,7 @@
 
 Your AI coding agent records *why* it made each choice, you approve it once, and
 `reasonledger why` tells you which decision justifies a line, function, or file. The records are
-plain files in your own repository. This is an alpha (`0.3.0a6`).
+plain files in your own repository. This is an alpha (`0.3.0a7`).
 
 A short demo of the loop (init, review in the UI, why):
 
