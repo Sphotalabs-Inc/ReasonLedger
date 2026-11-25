@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import sys
+from pathlib import Path
 
 from reasonledger_cli.approve_cmd import run_approve_cmd
 from reasonledger_cli.catchup_cmd import run_catchup_cmd
@@ -12,6 +13,7 @@ from reasonledger_cli.config_cmd import run_config
 from reasonledger_cli.conflict_config_cmd import run_conflict_config
 from reasonledger_cli.consent_cmd import run_consent_cmd
 from reasonledger_cli.dismiss_cmd import run_dismiss_cmd
+from reasonledger_cli.first_run import run_welcome
 from reasonledger_cli.import_cmd import run_confirm_cmd, run_import_cmd
 from reasonledger_cli.init_cmd import run_init
 from reasonledger_cli.judge_cmd import run_judge_cmd
@@ -46,6 +48,8 @@ def main(argv: list[str] | None = None) -> int:
     _use_utf8_output()
     parser = build_parser()
     args = parser.parse_args(argv)
+    if args.command is None:
+        return run_welcome(Path.cwd())
     if args.command == "init":
         try:
             out = run_init(
