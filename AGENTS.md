@@ -132,6 +132,16 @@ Set `proposed_by` on every record: `human` only when the user stated or explicit
 Never put a name, email, or any PII in free-text fields; the PII linter will reject the
 record and it is committed and shared like any other file.
 
+### Public records explain public code only
+
+This ledger is published with the repository, so a record must explain code that is in it,
+and its text must make sense to a reader who has only this repository. Do not name other
+repositories or projects, customers, testers or pilots, internal documents or their sections,
+or plans for work that lives elsewhere; describe what was observed instead ("on an
+application with separate frontend and backend folders"). A decision about work outside this
+repository is recorded where that work lives, not here. Read a record as a stranger would
+before committing it.
+
 ### Verify
 
 `reasonledger why <file>:<line>` should return the decision you just recorded. If it
