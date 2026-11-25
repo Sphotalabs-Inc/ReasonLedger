@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from importlib.metadata import version as package_version
 from pathlib import Path
 
 import pytest
@@ -14,7 +15,7 @@ from reasonledger_core.decisions import (
     write_decision_file,
 )
 from reasonledger_core.models.decision import DecisionStatus
-from reasonledger_mcp.server import create_mcp_server, main
+from reasonledger_mcp.server import DIST_NAME, SERVER_NAME, create_mcp_server, main
 from reasonledger_mcp.tools import call_query_decisions, call_record_decision
 
 CLIENTS = ("claude-code", "cursor", "copilot")
@@ -261,7 +262,9 @@ async def test_mcp_stdio_list_and_call_tools(tmp_path: Path) -> None:
         env={"RL_MCP_REPO_ROOT": str(tmp_path)},
     )
     async with stdio_client(server) as (read, write), ClientSession(read, write) as session:
-        await session.initialize()
+        init = await session.initialize()
+        assert init.serverInfo.name == SERVER_NAME
+        assert init.serverInfo.version == package_version(DIST_NAME)
         tools = await session.list_tools()
         names = {t.name for t in tools.tools}
         assert "record_decision" in names

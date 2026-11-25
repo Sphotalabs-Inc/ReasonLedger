@@ -26,6 +26,7 @@ from reasonledger_mcp.tools import (
 )
 
 SERVER_NAME = "reasonledger"
+DIST_NAME = "reasonledger-mcp"
 
 
 def _repo_root() -> Path:
@@ -36,6 +37,9 @@ def _repo_root() -> Path:
 def create_mcp_server(*, repo_root: Path | None = None) -> FastMCP:
     root = repo_root or _repo_root()
     mcp = FastMCP(SERVER_NAME, json_response=True)
+    # FastMCP takes no version, so `initialize` would report the SDK's own; agents and bug
+    # reports read this one. The stdio contract test fails if the SDK moves the attribute.
+    mcp._mcp_server.version = package_version(DIST_NAME)
 
     @mcp.tool()
     def record_decision(
@@ -215,11 +219,11 @@ def create_mcp_server(*, repo_root: Path | None = None) -> FastMCP:
 
 
 def main(argv: list[str] | None = None) -> None:
-    parser = argparse.ArgumentParser(prog="reasonledger-mcp")
+    parser = argparse.ArgumentParser(prog=DIST_NAME)
     parser.add_argument(
         "--version",
         action="version",
-        version=f"%(prog)s {package_version('reasonledger-mcp')}",
+        version=f"%(prog)s {package_version(DIST_NAME)}",
     )
     parser.add_argument(
         "--repo-root",
