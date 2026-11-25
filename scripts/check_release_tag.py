@@ -2,10 +2,10 @@
 
 Run by the `gate` job of `.github/workflows/release.yml` on a `v*` tag push, before anything is
 built. Publishing uploads whatever version `pyproject.toml` says, so a tag that disagrees with it
-(`v0.3.0a8` on a tree still at `0.3.0a7`) would put the wrong number on PyPI, where a version can
+(`v0.3.0a9` on a tree still at `0.3.0a8`) would put the wrong number on PyPI, where a version can
 never be reused.
 
-    python scripts/check_release_tag.py v0.3.0a7
+    python scripts/check_release_tag.py v0.3.0a8
 
 The three packages move in lockstep, so all three must carry the tag's version and require each
 other at exactly that version.
@@ -106,7 +106,7 @@ def check_tag(tag: str, versions: Mapping[str, str]) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    parser.add_argument("tag", help="the pushed tag, e.g. v0.3.0a7")
+    parser.add_argument("tag", help="the pushed tag, e.g. v0.3.0a8")
     args = parser.parse_args(argv)
     try:
         check_tag(args.tag, package_versions())

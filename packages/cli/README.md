@@ -10,7 +10,7 @@ a line, function, or file, and checks changes against a policy in CI.
 Everything it manages lives in a `.reasonledger/` directory inside your own repo. There
 is no database, no daemon, no account, and nothing runs in the background.
 
-> **Alpha (`0.3.0a7`).** Expect rough edges.
+> **Alpha (`0.3.0a8`).** Expect rough edges.
 
 ## Watch the demo
 

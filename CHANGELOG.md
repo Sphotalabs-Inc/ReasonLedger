@@ -2,6 +2,23 @@
 
 Versions move in lockstep across `reasonledger-core`, `reasonledger` and `reasonledger-mcp`.
 
+## 0.3.0a8 — pre-release
+
+### Fixed
+
+- `init` writes an MCP command that starts the install which ran it. A pip install run from its
+  venv without activating it used to get `uvx reasonledger mcp`, which fails where uv is absent and
+  otherwise fetches a different version; an older `reasonledger` earlier on `PATH` used to serve the
+  new install's repo. The bare `reasonledger` is still written when `PATH` finds this same install,
+  the absolute path of the launcher otherwise, and `uvx` only from a `uvx` run.
+- The three packages require each other at exactly the release version, the `[embeddings]` extra
+  included. A range let `pip install -U reasonledger` keep an older core or MCP server beside the
+  new CLI. The release tag check refuses a tag while any sibling pin differs from it.
+- The welcome, the `init` embeddings tip and the local-embedder hint link to the install docs on
+  GitHub instead of `docs/install.md`, which is not in the wheels.
+- The MCP server's `initialize` reply reports the `reasonledger-mcp` version instead of the `mcp`
+  SDK's.
+
 ## 0.3.0a7 — pre-release
 
 ### Changed

@@ -2,7 +2,7 @@
 
 **Audience:** maintainers publishing the packages. If you are installing ReasonLedger, you want [`install.md`](install.md) instead — publishing is not a step users perform.
 
-**Status:** the current version is `0.3.0a7`, an alpha. Publishing is done only by the **Release** workflow (`.github/workflows/release.yml`) using PyPI Trusted Publishing: no API token exists, and none belongs in this repository or in a maintainer's shell. This page is the procedure.
+**Status:** the current version is `0.3.0a8`, an alpha. Publishing is done only by the **Release** workflow (`.github/workflows/release.yml`) using PyPI Trusted Publishing: no API token exists, and none belongs in this repository or in a maintainer's shell. This page is the procedure.
 
 Publishing is **not** what makes ReasonLedger installable — [`install.md`](install.md) already documents a working `uv tool install` from a checkout, and that is the supported path today. What publishing buys is dropping the clone: `uvx reasonledger` from a machine that has never seen this repo.
 
@@ -10,7 +10,7 @@ Publishing is **not** what makes ReasonLedger installable — [`install.md`](ins
 
 ## What gets published
 
-Three packages, versioned in lockstep, all at `0.3.0a7`:
+Three packages, versioned in lockstep, all at `0.3.0a8`:
 
 | Dist name | Source | Depends on |
 |---|---|---|
@@ -59,9 +59,9 @@ Expect six files — a `.tar.gz` and a `.whl` for each package.
    ```
 
    The `--extra-index-url` is required: TestPyPI does not mirror real dependencies like `pydantic`.
-3. Release: push the tag (`git tag v0.3.0a7 && git push origin v0.3.0a7`). **The tag is the maintainer's step.** The workflow refuses a tag that is not exactly `v` plus the version the packages declare, or that points at a commit `main` does not contain.
+3. Release: push the tag (`git tag v0.3.0a8 && git push origin v0.3.0a8`). **The tag is the maintainer's step.** The workflow refuses a tag that is not exactly `v` plus the version the packages declare, or that points at a commit `main` does not contain.
 
-A version number on an index can never be reused, even after deletion, so a fix after publishing ships as the next pre-release (`0.3.0a8`).
+A version number on an index can never be reused, even after deletion, so a fix after publishing ships as the next pre-release (`0.3.0a9`).
 
 ## After the first publish
 
@@ -81,7 +81,7 @@ Copy into the release PR. Nothing below has been done yet.
 
 - [ ] Claim the three names on **TestPyPI** and confirm they are free on **PyPI**. `reasonledger`, `reasonledger-core`, and `reasonledger-mcp` are all unclaimed as of this writing; if any is taken by the time you get there, the dist names change and so does every `pyproject.toml` and the `[tool.uv.sources]` block in `packages/cli` and `packages/mcp`.
 - [ ] Register the trusted publishers and create the six GitHub environments (see step 1 of *Publish*). There is no API token to generate.
-- [x] Release version decided: `0.3.0a7` (pre-release); `0.3.0` follows the friend test. A fix after publishing ships as `0.3.0a8`.
+- [x] Release version decided: `0.3.0a8` (pre-release); `0.3.0` follows the friend test. A fix after publishing ships as `0.3.0a9`.
 
 **Gate — all green before any upload:**
 
@@ -104,6 +104,6 @@ Copy into the release PR. Nothing below has been done yet.
 ## Versioning
 
 - Conventional Commits drive the change log; the three `pyproject.toml` versions move together.
-- The release workflow runs `scripts/check_release_tag.py` on a tag push and stops unless the tag is exactly `v` plus the version all three packages declare. The upload takes its number from `pyproject.toml`, not from the tag, so this is what stops `v0.3.0a7` publishing `0.3.0a5`. It then stops unless the tagged commit is already on `main`. A TestPyPI rehearsal has no tag and skips both checks, and can only reach TestPyPI.
+- The release workflow runs `scripts/check_release_tag.py` on a tag push and stops unless the tag is exactly `v` plus the version all three packages declare. The upload takes its number from `pyproject.toml`, not from the tag, so this is what stops `v0.3.0a8` publishing `0.3.0a5`. It then stops unless the tagged commit is already on `main`. A TestPyPI rehearsal has no tag and skips both checks, and can only reach TestPyPI.
 - The workflow's actions are pinned to commits (the comment beside each names the tag), and the three `pyproject.toml` files require `hatchling>=1.27,<2`. 1.27 is the first release whose wheels carry `License-Expression` and the `LICENSE` and `NOTICE` files (1.26.2 builds without error but its wheels carry neither, which `check_dists.sh` would catch). Bump a SHA and its comment together.
 - The packages pin each other exactly (`reasonledger-core==X`, including the `[embeddings]` extra), so every version bump also bumps those pins in `packages/cli` and `packages/mcp`. A range would let `pip install -U reasonledger` keep an older core or MCP server beside the new CLI, a pairing no release was tested as. `check_release_tag.py` refuses a tag while any sibling pin differs from it, and `test_check_release_tag.py` and `test_dist_packaging.py` fail on the tree before that.
