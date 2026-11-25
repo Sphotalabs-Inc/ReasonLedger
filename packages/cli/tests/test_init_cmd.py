@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from pathlib import Path
 
 import pytest
@@ -261,10 +262,11 @@ def test_init_existing_mcp_config_untouched(tmp_path: Path) -> None:
 
 
 @pytest.mark.phase_3
-def test_init_falls_back_to_uvx_when_the_server_is_not_installed(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+def test_init_falls_back_to_uvx_when_run_through_uvx(
+    tmp_path: Path, launch_as: Callable[[Path, Path | None], None]
 ) -> None:
-    monkeypatch.setattr("shutil.which", lambda _name: None)
-    run_init(agents="all", root=tmp_path, scan=False)
-    entry = json.loads((tmp_path / ".mcp.json").read_text("utf-8"))["mcpServers"]["reasonledger"]
+    launch_as(tmp_path / "uv" / "environments-v2" / "x" / "bin" / "reasonledger", None)
+    app = tmp_path / "app"
+    run_init(agents="all", root=app, scan=False)
+    entry = json.loads((app / ".mcp.json").read_text("utf-8"))["mcpServers"]["reasonledger"]
     assert entry["command"] == "uvx" and entry["args"][:2] == ["reasonledger", "mcp"]

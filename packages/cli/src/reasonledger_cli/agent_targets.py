@@ -10,12 +10,16 @@ import json
 import os
 import re
 import shutil
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 
 from reasonledger_core.importer.scan import RULE_BEGIN, RULE_END
 
 CLI_EXECUTABLE = "reasonledger"
+CLI_MODULE = "reasonledger_cli"
+# Both console scripts start the same `main`, so either one can launch the server.
+CLI_SCRIPT_NAMES = frozenset({CLI_EXECUTABLE, "rl"})
 MCP_SUBCOMMAND = "mcp"
 UVX_EXECUTABLE = "uvx"
 # uv keeps `uvx` environments here; PATH holds one only while that process runs.
@@ -158,15 +162,53 @@ def installed_cli() -> bool:
     return found is not None and not _is_ephemeral(found)
 
 
+def running_launcher() -> list[str] | None:
+    """The command that started this process, or None when it lives in a throwaway environment.
+
+    A console script is its own launcher; `python -m reasonledger_cli` is the interpreter plus
+    `-m`. Under `uvx` either one sits in a uv cache directory the agent will not have.
+    """
+    script = Path(sys.argv[0])
+    if script.stem in CLI_SCRIPT_NAMES:
+        sibling = script.with_name(CLI_EXECUTABLE + script.suffix)
+        launcher, probe = [str((sibling if sibling.exists() else script).absolute())], script
+    else:
+        launcher, probe = [sys.executable, "-m", CLI_MODULE], Path(sys.executable)
+    return None if _is_ephemeral(str(probe.absolute())) else launcher
+
+
+def _same_file(first: str, second: str) -> bool:
+    try:
+        return os.path.samefile(first, second)
+    except OSError:
+        return False
+
+
+def _installed_command(repo_args: list[str]) -> dict[str, object] | None:
+    """The bare name when PATH finds this very install; otherwise its absolute launcher.
+
+    A pip install whose venv is not on the agent's PATH, or one shadowed by an older
+    `reasonledger` earlier on PATH, would otherwise start the wrong server or none at all.
+    """
+    launcher = running_launcher()
+    if launcher is None:
+        return None
+    on_path = shutil.which(CLI_EXECUTABLE)
+    if on_path is not None and _same_file(on_path, launcher[0]):
+        return {"command": CLI_EXECUTABLE, "args": repo_args}
+    return {"command": launcher[0], "args": [*launcher[1:], *repo_args]}
+
+
 def mcp_server_entry(
     *, reasonledger_root: Path | None, app_root: Path, stdio_type: bool = False
 ) -> dict[str, object]:
     """The agent's spawn command for the MCP server, against *this* app repo.
 
-    An installed `reasonledger` runs its `mcp` subcommand; otherwise `uvx` fetches it, so a
-    `uvx reasonledger init` user needs no second install. A caller who named a checkout with
-    `--reasonledger-root` gets `uv run --project`, not `--directory`: that moves the working
-    directory to the checkout, which is how a relative path resolves against the wrong repo.
+    The install that ran `init` runs its `mcp` subcommand, by bare name when PATH resolves to
+    it; a throwaway `uvx` run writes `uvx` instead, so a `uvx reasonledger init` user needs no
+    second install. A caller who named a checkout with `--reasonledger-root` gets
+    `uv run --project`, not `--directory`: that moves the working directory to the checkout,
+    which is how a relative path resolves against the wrong repo.
     """
     repo_args = [MCP_SUBCOMMAND, "--repo-root", str(app_root.resolve())]
     entry: dict[str, object]
@@ -181,10 +223,10 @@ def mcp_server_entry(
                 *repo_args,
             ],
         }
-    elif installed_cli():
-        entry = {"command": CLI_EXECUTABLE, "args": repo_args}
     else:
-        entry = {"command": UVX_EXECUTABLE, "args": [CLI_EXECUTABLE, *repo_args]}
+        installed = _installed_command(repo_args)
+        uvx: dict[str, object] = {"command": UVX_EXECUTABLE, "args": [CLI_EXECUTABLE, *repo_args]}
+        entry = installed if installed is not None else uvx
     return {"type": "stdio", **entry} if stdio_type else entry
 
 

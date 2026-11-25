@@ -10,6 +10,7 @@ from __future__ import annotations
 import asyncio
 import json
 import sys
+from collections.abc import Callable
 from pathlib import Path
 
 import pytest
@@ -17,9 +18,12 @@ from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 from reasonledger_cli.init_cmd import run_init
 
+# The `launch_as` fixture from conftest: the script that ran, and what PATH finds.
+LaunchAs = Callable[[Path, Path | None], None]
 REPO_ROOT = Path(__file__).resolve().parents[3]
-EPHEMERAL_EXECUTABLE = "/home/dev/.cache/uv/environments-v2/9f3c/bin/reasonledger"
-INSTALLED_EXECUTABLE = "/home/dev/.local/bin/reasonledger"
+# Relative, so each test places them under its own tmp_path.
+EPHEMERAL_EXECUTABLE = ".cache/uv/environments-v2/9f3c/bin/reasonledger"
+INSTALLED_EXECUTABLE = ".local/bin/reasonledger"
 
 
 def _entry(root: Path) -> dict[str, object]:
@@ -46,50 +50,84 @@ def test_mcp_subcommand_serves_stdio(tmp_path: Path) -> None:
 
 
 @pytest.mark.phase_3
-def test_init_entry_uses_the_mcp_subcommand(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    monkeypatch.setattr("shutil.which", lambda _name: INSTALLED_EXECUTABLE)
-    run_init(root=tmp_path, scan=False)
-    assert _entry(tmp_path) == {
+def test_init_entry_uses_the_mcp_subcommand(tmp_path: Path, launch_as: LaunchAs) -> None:
+    """PATH resolves to the install that ran `init`, so the portable bare name is enough."""
+    installed = tmp_path / INSTALLED_EXECUTABLE
+    launch_as(installed, installed)
+    run_init(root=tmp_path / "app", scan=False)
+    assert _entry(tmp_path / "app") == {
         "command": "reasonledger",
-        "args": ["mcp", "--repo-root", str(tmp_path.resolve())],
+        "args": ["mcp", "--repo-root", str((tmp_path / "app").resolve())],
     }
 
 
 @pytest.mark.phase_3
-def test_init_uses_uvx_when_reasonledger_is_not_installed(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    monkeypatch.setattr("shutil.which", lambda _name: None)
-    run_init(root=tmp_path, scan=False)
-    assert _entry(tmp_path) == {
+def test_init_ignores_an_ephemeral_executable(tmp_path: Path, launch_as: LaunchAs) -> None:
+    """Under `uvx`, this process lives in a cache directory that will not exist for the agent."""
+    ephemeral = tmp_path / EPHEMERAL_EXECUTABLE
+    launch_as(ephemeral, ephemeral)
+    run_init(root=tmp_path / "app", scan=False)
+    assert _entry(tmp_path / "app") == {
         "command": "uvx",
-        "args": ["reasonledger", "mcp", "--repo-root", str(tmp_path.resolve())],
+        "args": ["reasonledger", "mcp", "--repo-root", str((tmp_path / "app").resolve())],
     }
-
-
-@pytest.mark.phase_3
-def test_init_ignores_an_ephemeral_executable(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    """Under `uvx`, PATH holds a cache directory that will not exist for the agent."""
-    monkeypatch.setattr("shutil.which", lambda _name: EPHEMERAL_EXECUTABLE)
-    run_init(root=tmp_path, scan=False)
-    assert _entry(tmp_path)["command"] == "uvx"
 
 
 @pytest.mark.phase_3
 def test_init_ignores_an_executable_inside_the_uv_cache_dir(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, launch_as: LaunchAs
 ) -> None:
     cache = tmp_path / "custom-cache"
     monkeypatch.setenv("UV_CACHE_DIR", str(cache))
-    monkeypatch.setattr(
-        "shutil.which", lambda _name: str(cache / "tmp123" / "bin" / "reasonledger")
-    )
+    script = cache / "tmp123" / "bin" / "reasonledger"
+    launch_as(script, script)
     run_init(root=tmp_path / "app", scan=False)
     assert _entry(tmp_path / "app")["command"] == "uvx"
+
+
+@pytest.mark.phase_3
+def test_init_writes_the_absolute_launcher_when_path_finds_nothing(
+    tmp_path: Path, launch_as: LaunchAs
+) -> None:
+    """A pip venv run by path without activating it: the agent's PATH will not find it either."""
+    script = tmp_path / "venv" / "bin" / "reasonledger"
+    launch_as(script, None)
+    run_init(root=tmp_path / "app", scan=False)
+    assert _entry(tmp_path / "app")["command"] == str(script)
+
+
+@pytest.mark.phase_3
+def test_init_writes_the_absolute_launcher_when_path_finds_another_install(
+    tmp_path: Path, launch_as: LaunchAs
+) -> None:
+    """An older global `reasonledger` earlier on PATH must not serve this install's repo."""
+    script = tmp_path / "venv" / "bin" / "reasonledger"
+    launch_as(script, tmp_path / "old" / "bin" / "reasonledger")
+    run_init(root=tmp_path / "app", scan=False)
+    assert _entry(tmp_path / "app")["command"] == str(script)
+
+
+@pytest.mark.phase_3
+def test_the_rl_alias_writes_its_reasonledger_sibling(tmp_path: Path, launch_as: LaunchAs) -> None:
+    installed = tmp_path / "bin" / "reasonledger"
+    launch_as(tmp_path / "bin" / "rl", installed)
+    run_init(root=tmp_path / "app", scan=False)
+    assert _entry(tmp_path / "app")["command"] == "reasonledger"
+
+
+@pytest.mark.phase_3
+def test_python_dash_m_writes_the_interpreter(tmp_path: Path, launch_as: LaunchAs) -> None:
+    launch_as(tmp_path / "reasonledger_cli" / "__main__.py", None)
+    run_init(root=tmp_path / "app", scan=False)
+    entry = _entry(tmp_path / "app")
+    assert entry["command"] == sys.executable
+    assert entry["args"] == [
+        "-m",
+        "reasonledger_cli",
+        "mcp",
+        "--repo-root",
+        str((tmp_path / "app").resolve()),
+    ]
 
 
 @pytest.mark.phase_3

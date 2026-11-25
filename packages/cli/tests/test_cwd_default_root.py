@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import json
+from collections.abc import Callable
 from pathlib import Path
 
 import pytest
@@ -103,13 +104,15 @@ def test_cwd_root_never_reads_a_sibling_repo(
 
 @pytest.mark.phase_3
 def test_init_mcp_snippet_runs_the_installed_executable(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path, launch_as: Callable[[Path, Path | None], None]
 ) -> None:
-    monkeypatch.setattr("shutil.which", lambda _name: "/usr/bin/reasonledger")
-    run_init(root=tmp_path, scan=False)
-    entry = json.loads((tmp_path / ".mcp.json").read_text("utf-8"))["mcpServers"]["reasonledger"]
+    installed = tmp_path / "bin" / "reasonledger"
+    launch_as(installed, installed)
+    app = tmp_path / "app"
+    run_init(root=app, scan=False)
+    entry = json.loads((app / ".mcp.json").read_text("utf-8"))["mcpServers"]["reasonledger"]
     assert entry["command"] == "reasonledger"
-    assert entry["args"] == ["mcp", "--repo-root", str(tmp_path.resolve())]
+    assert entry["args"] == ["mcp", "--repo-root", str(app.resolve())]
 
 
 @pytest.mark.phase_3
