@@ -1,5 +1,7 @@
 # reasonledger-core
 
+[![CI](https://github.com/Sphotalabs-Inc/ReasonLedger/actions/workflows/ci.yml/badge.svg)](https://github.com/Sphotalabs-Inc/ReasonLedger/actions/workflows/ci.yml) [![PyPI](https://img.shields.io/pypi/v/reasonledger-core?include_prereleases&label=PyPI)](https://pypi.org/project/reasonledger-core/)
+
 Framework-free domain logic for [ReasonLedger](https://github.com/Sphotalabs-Inc/ReasonLedger) —
 the audit-critical heart shared by the CLI and the MCP server.
 

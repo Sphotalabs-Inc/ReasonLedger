@@ -1,4 +1,4 @@
-"""`reasonledger why`: the decisions that explain a line of code."""
+"""`reasonledger why`: the decisions that explain a line, function, or file."""
 
 from __future__ import annotations
 

@@ -1,6 +1,6 @@
 # ReasonLedger — Integration guide
 
-**Decision memory for AI-assisted codebases — never lose the why behind a line of code.**
+**Decision memory for AI-assisted codebases — never lose the why behind a line, function, or file.**
 
 **Audience:** Engineers and coding agents (Cursor, Claude Code, Copilot) integrating ReasonLedger into an application repository.  
 
@@ -76,12 +76,14 @@ When an agent records a decision, include TypeScript paths:
 
 Commit `.reasonledger/decisions/*.md` with the PR.
 
-### 4. Ask why at a line
+### 4. Ask why at a line, function, or file
 
 ```bash
 cd /absolute/path/to/your-ts-app
 reasonledger why src/payments/retry.ts:4
 reasonledger why src/payments/retry.ts:4 --json
+reasonledger why src/payments/retry.ts::withRetry   # a function
+reasonledger why src/payments/retry.ts              # a whole file
 ```
 
 On a miss: exit `0` with `no decision justifies this line yet`.
@@ -261,7 +263,7 @@ shared file it is the block between `<!-- reasonledger:begin -->` and `<!-- reas
 # After the agent records a decision
 ls your-app/.reasonledger/decisions/
 
-# Which decision justifies a line?
+# Which decision justifies a line, function, or file?
 cd /absolute/path/to/your-app
 reasonledger why payments/retry.py:55
 ```
