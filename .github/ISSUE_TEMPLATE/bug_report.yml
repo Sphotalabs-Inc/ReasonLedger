@@ -1,0 +1,53 @@
+name: Bug report
+description: Something failed, or did not do what the docs say.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for testing ReasonLedger. Please do not paste source code, secrets, API keys or
+        anyone's personal details into this issue; describe the shape of the problem instead.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you ran, what you expected, and what you got instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. uvx reasonledger init
+        2. ...
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Output of `reasonledger --version` (or `uvx reasonledger --version`).
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options: [macOS (Apple Silicon), macOS (Intel), Linux, Windows, Other]
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: How you installed it
+      options: [uvx, uv tool install, pip in a virtual environment, From a checkout, Other]
+  - type: dropdown
+    id: agent
+    attributes:
+      label: Coding agent
+      options: [Claude Code, Cursor, VS Code (Copilot), Other, None]
+  - type: textarea
+    id: output
+    attributes:
+      label: Error output
+      description: The error message or traceback, with any paths or names you would rather not share removed.
+      render: text

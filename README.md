@@ -66,6 +66,22 @@ dec_4qveld
 The install, the first-run walk-through and what `init` writes are in
 [`docs/install.md`](docs/install.md) and [`docs/user-manual.md`](docs/user-manual.md).
 
+## Help test the alpha
+
+We are looking for developers to run the whole loop on a repository they really work on and tell
+us where it breaks or confuses them.
+
+1. In that repository, run `uvx reasonledger init`, then restart your coding agent (Claude Code,
+   Cursor or VS Code) so it picks up the MCP server and the rule.
+2. Work as usual. When your agent makes a real choice between alternatives, it records it.
+3. Run `uvx reasonledger ui` to review and approve what it recorded.
+4. Run `uvx reasonledger why <file>:<line>` on code it changed.
+
+Most useful to hear about: an install that fails, an agent that records nothing (or records
+noise), a `why` that names the wrong decision, and anything in the UI you had to guess at.
+[Open an issue](https://github.com/Sphotalabs-Inc/ReasonLedger/issues/new/choose) with the output of `reasonledger --version`, your OS and your agent.
+Please do not paste source code or secrets into an issue.
+
 ## Start here
 
 | Role | Read |

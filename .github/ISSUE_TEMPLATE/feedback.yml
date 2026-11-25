@@ -1,0 +1,25 @@
+name: Feedback
+description: Something was confusing, noisy, or missing, without being a bug.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        What you tried and how it felt is as useful as a bug report. Please do not paste source
+        code, secrets or anyone's personal details.
+  - type: textarea
+    id: feedback
+    attributes:
+      label: What you tried and what you noticed
+      description: For example, the agent recorded too much or too little, a `why` answer was unclear, or a UI step needed guessing.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Output of `reasonledger --version`.
+  - type: dropdown
+    id: agent
+    attributes:
+      label: Coding agent
+      options: [Claude Code, Cursor, VS Code (Copilot), Other, None]
